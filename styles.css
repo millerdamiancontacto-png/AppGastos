@@ -1,0 +1,508 @@
+/* =========================================
+   VARIABLES GENERALES (SINCRO CON FACULTAD)
+========================================= */
+:root {
+    /* PREDOMINIO DE NEGRO PURO Y CARBÓN ÓSCURO */
+    --bg-main: #040406;
+    --bg-card: #0b0910;
+    --bg-card-hover: #120e1a;
+    --bg-input: #110e17;
+    --border-color: #261938;
+
+    /* ACENTOS VIOLETAS VIVOS */
+    --violet-primary: #8b5cf6;
+    --violet-gradient: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+    --violet-glow: rgba(139, 92, 246, 0.2);
+    --violet-light: #c084fc;
+    --violet-dark: #5b21b6;
+
+    /* ESTADOS Y TEXTO */
+    --expense: #ef4444;
+    --warning: #f59e0b;
+    --success: #10b981;
+    --text-main: #f3f4f6;
+    --text-muted: #8e85a2;
+
+    --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --shadow-hover: 0 12px 32px var(--violet-glow);
+
+    --radius-lg: 16px;
+    --radius-md: 10px;
+    --radius-sm: 6px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    padding-bottom: 3rem;
+    min-height: 100vh;
+    background-image: radial-gradient(circle at 50% 0%, rgba(124, 58, 237, 0.08), transparent 50%);
+}
+
+/* 1. AMPLIADO DE ANCHO GENERAL */
+.app-container {
+    max-width: 1500px;
+    width: 94%;
+    margin: 0 auto;
+    padding: 1.5rem 0;
+}
+
+/* =========================================
+   BARRA DE NAVEGACIÓN
+========================================= */
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 1rem 2rem;
+    border-radius: 20px;
+    box-shadow: var(--shadow-card);
+    margin-bottom: 2rem;
+}
+
+.nav-index-centrado {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.nav-index-centrado .nav-pills {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.nav-pills {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.nav-pills a {
+    text-decoration: none;
+    color: var(--text-muted);
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.nav-pills a:hover {
+    background-color: var(--bg-card-hover);
+    color: var(--text-main);
+    border-color: var(--border-color);
+}
+
+.nav-pills a.active {
+    background: var(--violet-gradient);
+    color: #ffffff;
+    box-shadow: 0 4px 15px var(--violet-glow);
+}
+
+/* =========================================
+   TARJETAS Y MÓDULOS
+========================================= */
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    box-shadow: var(--shadow-card);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    border-color: var(--violet-primary);
+    box-shadow: var(--shadow-hover);
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-bottom: 30px;
+}
+
+.module-card {
+    padding: 1rem;
+    cursor: pointer;
+}
+
+.card-image {
+    width: 100%;
+    height: 250px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 18px;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+}
+
+.card-footer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 0.25rem;
+}
+
+.icon-box {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+}
+
+.card-text {
+    flex: 1;
+}
+
+.card-text h3 {
+    font-size: 1.2rem;
+    color: var(--text-main);
+    font-weight: 700;
+}
+
+.card-text p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.arrow-btn {
+    border: 1px solid var(--border-color);
+    background: var(--bg-input);
+    color: var(--violet-light);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.arrow-btn:hover {
+    background: var(--violet-gradient);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 0 12px var(--violet-glow);
+}
+
+/* Estilos de Facultad / Temáticos adaptados al fondo oscuro */
+.blue-bg {
+    background: var(--violet-gradient);
+    color: #FFFFFF;
+}
+
+.blue-light {
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+}
+
+.blue-light-circle {
+    background-color: rgba(139, 92, 246, 0.15);
+}
+
+.blue-text {
+    color: var(--violet-light);
+}
+
+/* =========================================
+   WIDGETS DE RESUMEN Y METAS
+========================================= */
+.widgets-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    margin-bottom: 2rem;
+}
+
+.widget-card {
+    padding: 2rem;
+}
+
+.widget-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.75rem;
+    color: var(--text-main);
+    font-size: 1.1rem;
+}
+
+.dashboard-resumen-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2.5rem;
+}
+
+.resumen-valores-bloque {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* Estructura para 4 categorías en la fila superior */
+.grid-4-items {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    align-items: center;
+}
+
+.resumen-fila-inferior {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 1.5rem;
+}
+
+.expense-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.expense-item p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.expense-item h4 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.divider {
+    width: 1px;
+    height: 40px;
+    background-color: var(--border-color);
+}
+
+.horizontal-divider {
+    height: 1px;
+    width: 100%;
+    background-color: var(--border-color);
+    margin: 0.5rem 0;
+}
+
+.total-item-destacado {
+    text-align: right;
+    border-left: 2px solid var(--border-color);
+    padding-left: 2.5rem;
+    min-width: 240px;
+}
+
+.total-item-destacado p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+
+.total-item-destacado h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0.25rem 0;
+    color: #fff;
+}
+
+.badge {
+    font-size: 0.8rem;
+    padding: 0.35rem 0.65rem;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+/* =========================================
+   BARRA DE PROGRESO DE METAS
+========================================= */
+.goal-content {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding-top: 0.5rem;
+}
+
+.goal-info {
+    width: 100%;
+}
+
+.goal-info h2 {
+    font-size: 1.65rem;
+    margin-bottom: 1.25rem;
+    color: #fff;
+}
+
+.progress-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 14px;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--violet-gradient);
+    border-radius: 10px;
+}
+
+.progress-text {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--violet-light);
+}
+
+.sub-text {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.goal-image {
+    font-size: 4.5rem;
+    margin-left: 1rem;
+}
+
+/* =========================================
+   BANNER INFERIOR Y UTILITARIOS
+========================================= */
+.quote-banner {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.5rem 2rem;
+}
+
+.quote-banner p {
+    font-weight: 500;
+    font-size: 1.1rem;
+    color: var(--text-muted);
+}
+
+.icon-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.purple-bg { background-color: var(--violet-dark); color: #fff; border: 1px solid var(--violet-primary); }
+.purple-light { background-color: var(--bg-input); }
+.purple-text { color: var(--violet-light); }
+
+.green-bg { background-color: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+.green-light { background-color: rgba(16, 185, 129, 0.1); }
+.green-text { color: var(--success); }
+.green-badge { background-color: rgba(16, 185, 129, 0.2); color: var(--success); }
+
+.orange-bg { background-color: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
+.orange-light { background-color: rgba(245, 158, 11, 0.1); }
+.orange-text { color: var(--warning); }
+
+/* =========================================
+   ADAPTABILIDAD RESPONSIVA
+========================================= */
+@media (max-width: 1200px) {
+    .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .grid-4-items {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .widgets-grid { 
+        grid-template-columns: 1fr; 
+    }
+    .dashboard-resumen-container { 
+        flex-direction: column; 
+        align-items: flex-start; 
+        gap: 1.5rem; 
+    }
+    .grid-4-items,
+    .resumen-fila-inferior { 
+        grid-template-columns: 1fr;
+        flex-direction: column; 
+        align-items: flex-start; 
+        gap: 1rem; 
+        width: 100%; 
+    }
+    .divider, 
+    .horizontal-divider { 
+        display: none; 
+    }
+    .total-item-destacado { 
+        text-align: left; 
+        border-left: none; 
+        padding-left: 0; 
+        width: 100%; 
+        border-top: 2px solid var(--border-color); 
+        padding-top: 1rem; 
+    }
+}
+
+@media (max-width: 600px) {
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+}
+/* Saldo inicial en header del widget */
+.saldo-inicial-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #111827;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.saldo-inicial-box label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #a78bfa;
+    white-space: nowrap;
+}
+
+.saldo-inicial-box input {
+    width: 90px;
+    background: transparent;
+    border: none;
+    color: #10b981;
+    font-weight: 700;
+    font-size: 0.95rem;
+    outline: none;
+}

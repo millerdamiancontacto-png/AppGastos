@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="logo2.png">
+    <title>Metas & Finanzas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- BARRA DE NAVEGACIÓN SUPERIOR -->
+        <header class="top-nav nav-index-centrado">
+            <nav class="nav-pills">
+                <a href="index.html" class="active"><i class="fas fa-home"></i> Inicio</a>
+                <a href="gastos.html"><i class="fas fa-dollar-sign"></i> Metas</a>
+                <a href="metas.html"><i class="fas fa-bullseye"></i> Ahorros</a>
+                <a href="ingresos.html"><i class="fas fa-flag-checkered"></i> Ingresos Redline</a>
+                <a href="uber.html"><i class="fas fa-car"></i> Ingresos Uber</a>
+            </nav>
+        </header>
+
+        <main id="dashboard">
+
+            <!-- 4 TARJETAS EN UNA LÍNEA -->
+            <div class="cards-grid">
+                
+                <!-- Mi Clio -->
+                <div class="card module-card" onclick="window.location.href='auto.html'">
+                    <div class="card-image" style="background-image: url('auto.png');"></div>
+                    <div class="card-footer">
+                        <div class="icon-box purple-bg"><i class="fas fa-car"></i></div>
+                        <div class="card-text">
+                            <h3>Mi Clio</h3>
+                            <p>Gastos del auto</p>
+                        </div>
+                        <button class="arrow-btn purple-light"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- Facultad -->
+                <div class="card module-card" onclick="window.location.href='facultad.html'">
+                    <div class="card-image" style="background-image: url('facultad.png');"></div>
+                    <div class="card-footer">
+                        <div class="icon-box blue-bg"><i class="fas fa-graduation-cap"></i></div>
+                        <div class="card-text">
+                            <h3>Facultad</h3>
+                            <p>Calendario y materias</p>
+                        </div>
+                        <button class="arrow-btn blue-light"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- Hogar -->
+                <div class="card module-card" onclick="window.location.href='hogar.html'">
+                    <div class="card-image" style="background-image: url('hogar.png');"></div>
+                    <div class="card-footer">
+                        <div class="icon-box green-bg"><i class="fas fa-home"></i></div>
+                        <div class="card-text">
+                            <h3>Hogar</h3>
+                            <p>Gastos del hogar</p>
+                        </div>
+                        <button class="arrow-btn green-light"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- Mascotas -->
+                <div class="card module-card" onclick="window.location.href='mascotas.html'">
+                    <div class="card-image" style="background-image: url('mascotas.png');"></div>
+                    <div class="card-footer">
+                        <div class="icon-box orange-bg"><i class="fas fa-paw"></i></div>
+                        <div class="card-text">
+                            <h3>Mascotas</h3>
+                            <p>Gastos de mascotas</p>
+                        </div>
+                        <button class="arrow-btn orange-light"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RESUMEN Y METAS -->
+            <div class="widgets-grid">
+                
+                <div class="card widget-card expenses-widget">
+                    <div class="widget-header" style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <i class="fas fa-wallet purple-text"></i> 
+                            <h3>Resumen Mensual</h3>
+                        </div>
+                        <!-- CAMPO SALDO INICIAL -->
+                        <div class="saldo-inicial-box">
+                            <label for="input-saldo-inicial"><i class="fas fa-piggy-bank"></i> Saldo Inicial:</label>
+                            <input type="number" id="input-saldo-inicial" placeholder="0.00" onchange="guardarYRecalcularSaldoInicial(this.value)">
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-resumen-container">
+                        
+                        <div class="resumen-valores-bloque">
+                            <!-- Fila Superior: Categorías de gastos -->
+                            <div class="resumen-fila-superior grid-4-items">
+                                <div class="expense-item">
+                                    <div class="icon-circle purple-light"><i class="fas fa-car purple-text"></i></div>
+                                    <div>
+                                        <p>Mi Clio</p>
+                                        <h4 class="purple-text" id="monto-index-clio">$0,00</h4>
+                                    </div>
+                                </div>
+                                <div class="expense-item">
+                                    <div class="icon-circle blue-light-circle"><i class="fas fa-graduation-cap blue-text"></i></div>
+                                    <div>
+                                        <p>Facultad</p>
+                                        <h4 class="blue-text" id="monto-index-facultad">$0,00</h4>
+                                    </div>
+                                </div>
+                                <div class="expense-item">
+                                    <div class="icon-circle green-light"><i class="fas fa-home green-text"></i></div>
+                                    <div>
+                                        <p>Hogar</p>
+                                        <h4 class="green-text" id="monto-index-hogar">$0,00</h4>
+                                    </div>
+                                </div>
+                                <div class="expense-item">
+                                    <div class="icon-circle orange-light"><i class="fas fa-paw orange-text"></i></div>
+                                    <div>
+                                        <p>Mascotas</p>
+                                        <h4 class="orange-text" id="monto-index-mascotas">$0,00</h4>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="horizontal-divider"></div>
+
+                            <!-- Fila Inferior: Totales -->
+                            <div class="resumen-fila-inferior">
+                                <div class="expense-item">
+                                    <div class="icon-circle" style="background-color: #FEE2E2;"><i class="fas fa-arrow-down" style="color: #EF4444;"></i></div>
+                                    <div>
+                                        <p>Total Gastos</p>
+                                        <h4 style="color: #EF4444;" id="monto-index-total-gastos">$0,00</h4>
+                                    </div>
+                                </div>
+                                <div class="divider"></div>
+                                <div class="expense-item">
+                                    <div class="icon-circle" style="background-color: #E0F2FE;"><i class="fas fa-arrow-up" style="color: #0284C7;"></i></div>
+                                    <div>
+                                        <p>Ingresos Mes</p>
+                                        <h4 style="color: #0284C7;" id="monto-index-ingresos">$0,00</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bloque derecho destacado -->
+                        <div class="total-item-destacado">
+                            <p>Queda disponible</p>
+                            <h2 id="monto-index-total">$0,00</h2>
+                            <span class="badge green-badge" id="badge-info-saldo">Incluye saldo inicial</span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card widget-card goal-widget">
+                    <div class="widget-header">
+                        <i class="fas fa-bullseye purple-text"></i> 
+                        <h3>Próximo Ahorro</h3>
+                    </div>
+                    <div class="goal-content" id="contenedor-proxima-meta">
+                        <div class="goal-info">
+                            <h2 id="index-meta-nombre">Ahorrar $3.000.000</h2>
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="index-meta-barra" style="width: 0%;"></div>
+                                </div>
+                                <span class="progress-text" id="index-meta-porcentaje">0%</span>
+                            </div>
+                            <p class="sub-text" id="index-meta-detalle">Ya llevas $0</p>
+                        </div>
+                        <div class="goal-image">
+                            💰
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="card quote-banner">
+                <div class="icon-circle purple-light"><i class="fas fa-star purple-text"></i></div>
+                <p>Pequeñas decisiones hoy, grandes logros mañana. 💜</p>
+            </div>
+
+        </main>
+    </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        cargarSaldoInicialGuardado();
+        inicializarBaseYCalcularDashboard();
+        actualizarProximaMetaDashboard();
+    });
+
+    function cargarSaldoInicialGuardado() {
+        const hoy = new Date();
+        const claveMes = `saldo_inicial_${hoy.getFullYear()}_${hoy.getMonth()}`;
+        const saldoGuardado = localStorage.getItem(claveMes) || 0;
+        document.getElementById('input-saldo-inicial').value = saldoGuardado > 0 ? saldoGuardado : '';
+    }
+
+    function guardarYRecalcularSaldoInicial(monto) {
+        const hoy = new Date();
+        const claveMes = `saldo_inicial_${hoy.getFullYear()}_${hoy.getMonth()}`;
+        localStorage.setItem(claveMes, parseFloat(monto) || 0);
+        inicializarBaseYCalcularDashboard();
+    }
+
+    function inicializarBaseYCalcularDashboard() {
+        const hoy = new Date();
+        const mesActual = hoy.getMonth();
+        const anioActual = hoy.getFullYear();
+        const formatoMoneda = { minimumFractionDigits: 2, maximumFractionDigits: 2 };
+
+        const claveMes = `saldo_inicial_${anioActual}_${mesActual}`;
+        const saldoInicialMes = parseFloat(localStorage.getItem(claveMes)) || 0;
+
+        function esMesActual(fechaStr) {
+            if (!fechaStr) return false;
+            let fechaGasto;
+            if(fechaStr.includes('-')) {
+                const partes = fechaStr.split('-');
+                fechaGasto = new Date(partes[0], partes[1] - 1, partes[2]);
+            } else if(fechaStr.includes('/')) {
+                const partes = fechaStr.split('/');
+                fechaGasto = new Date(partes[2], partes[1] - 1, partes[0]);
+            }
+            return fechaGasto && fechaGasto.getMonth() === mesActual && fechaGasto.getFullYear() === anioActual;
+        }
+
+        let totalAutoMes = 0;
+        const requestDB = indexedDB.open('FinanzasAppDB', 1);
+
+        requestDB.onsuccess = function(event) {
+            const db = event.target.result;
+            if (db.objectStoreNames.contains('gastos_clio')) {
+                const transaction = db.transaction(['gastos_clio'], 'readonly');
+                const store = transaction.objectStore('gastos_clio');
+                
+                store.openCursor().onsuccess = function(e) {
+                    const cursor = e.target.result;
+                    if (cursor) {
+                        const gasto = cursor.value;
+                        if (esMesActual(gasto.fecha)) {
+                            totalAutoMes += parseFloat(gasto.monto || 0);
+                        }
+                        cursor.continue();
+                    } else {
+                        procesarRestoDeModulos(totalAutoMes);
+                    }
+                };
+            } else {
+                procesarRestoDeModulos(0);
+            }
+        };
+
+        requestDB.onerror = function() {
+            procesarRestoDeModulos(0);
+        };
+
+        function procesarRestoDeModulos(montoClioEfectivo) {
+            let listaMascotas = JSON.parse(localStorage.getItem('gastos_mascotas_datos')) || [];
+            let totalMascotasMes = 0;
+            listaMascotas.forEach(g => {
+                if (esMesActual(g.fecha)) {
+                    totalMascotasMes += parseFloat(g.monto || 0);
+                }
+            });
+
+            let listaHogar = JSON.parse(localStorage.getItem('gastos_hogar_datos')) || [];
+            let totalHogarMes = 0;
+            listaHogar.forEach(g => {
+                if (esMesActual(g.fecha)) {
+                    totalHogarMes += parseFloat(g.monto || 0);
+                }
+            });
+
+            let listaFacultad = JSON.parse(localStorage.getItem('gastos_facultad_datos')) || JSON.parse(localStorage.getItem('facultad_gastos')) || [];
+            let totalFacultadMes = 0;
+            listaFacultad.forEach(g => {
+                if (esMesActual(g.fecha)) {
+                    totalFacultadMes += parseFloat(g.monto || 0);
+                }
+            });
+
+            let listaIngresosRedline = JSON.parse(localStorage.getItem('ingresos_proyectos_datos')) || [];
+            let totalIngresosGenerados = 0;
+            listaIngresosRedline.forEach(i => {
+                if (esMesActual(i.fecha)) {
+                    totalIngresosGenerados += parseFloat(i.monto || 0);
+                }
+            });
+
+            let listaIngresosUber = JSON.parse(localStorage.getItem('ingresos_uber_datos')) || [];
+            listaIngresosUber.forEach(u => {
+                if (esMesActual(u.fecha)) {
+                    totalIngresosGenerados += parseFloat(u.ganancia || 0);
+                }
+            });
+
+            let totalGastosGeneral = montoClioEfectivo + totalHogarMes + totalMascotasMes + totalFacultadMes;
+            let saldoQueda = saldoInicialMes + totalIngresosGenerados - totalGastosGeneral;
+
+            document.getElementById('monto-index-clio').textContent = `$${montoClioEfectivo.toLocaleString('es-AR', formatoMoneda)}`;
+            document.getElementById('monto-index-facultad').textContent = `$${totalFacultadMes.toLocaleString('es-AR', formatoMoneda)}`;
+            document.getElementById('monto-index-hogar').textContent = `$${totalHogarMes.toLocaleString('es-AR', formatoMoneda)}`;
+            document.getElementById('monto-index-mascotas').textContent = `$${totalMascotasMes.toLocaleString('es-AR', formatoMoneda)}`;
+            
+            document.getElementById('monto-index-total-gastos').textContent = `$${totalGastosGeneral.toLocaleString('es-AR', formatoMoneda)}`;
+            document.getElementById('monto-index-ingresos').textContent = `$${totalIngresosGenerados.toLocaleString('es-AR', formatoMoneda)}`;
+            
+            const elTotal = document.getElementById('monto-index-total');
+            elTotal.textContent = `$${saldoQueda.toLocaleString('es-AR', formatoMoneda)}`;
+            
+            if (saldoQueda < 0) {
+                elTotal.style.color = '#EF4444'; 
+            } else {
+                elTotal.style.color = 'var(--text-main)';
+            }
+        }
+    }
+
+    function actualizarProximaMetaDashboard() {
+        const metas = JSON.parse(localStorage.getItem('metas_ahorro_datos')) || [];
+        const formato = { maximumFractionDigits: 0 };
+
+        if (metas.length === 0) {
+            document.getElementById('contenedor-proxima-meta').innerHTML = `
+                <div class="goal-info">
+                    <h2>Sin Ahorros activos</h2>
+                    <p class="sub-text">Hacé clic en Ahorros arriba para configurar tus objetivos de ahorro.</p>
+                </div>
+                <div class="goal-image">🎯</div>
+            `;
+            return;
+        }
+
+        const proximaMeta = metas[0];
+        let porcentaje = Math.round((proximaMeta.actual / proximaMeta.objetivo) * 100);
+        if (porcentaje > 100) porcentaje = 100;
+
+        document.getElementById('index-meta-nombre').textContent = `${proximaMeta.nombre}`;
+        document.getElementById('index-meta-barra').style.width = `${porcentaje}%`;
+        document.getElementById('index-meta-porcentaje').textContent = `${porcentaje}%`;
+        
+        if (porcentaje >= 100) {
+            document.getElementById('index-meta-detalle').textContent = `¡Objetivo cumplido! 🎉 Llevás $${proximaMeta.actual.toLocaleString('es-AR', formato)}`;
+        } else {
+            document.getElementById('index-meta-detalle').textContent = `Llevás $${proximaMeta.actual.toLocaleString('es-AR', formato)} de $${proximaMeta.objetivo.toLocaleString('es-AR', formato)}`;
+        }
+    }
+</script>
+</body>
+</html>

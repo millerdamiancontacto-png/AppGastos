@@ -1,0 +1,273 @@
+@import url('styles.css');
+
+/* Botón directo de retroceso (Flecha limpia) */
+.btn-back-arrow {
+    font-size: 1.25rem;
+    color: #a78bfa;
+    transition: color 0.2s ease, transform 0.2s ease;
+    margin-right: 8px;
+}
+
+.btn-back-arrow:hover {
+    color: #8b5cf6;
+    transform: translateX(-3px);
+}
+
+/* Estructura de Grilla para los dos formularios */
+.metas-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 2.5rem;
+}
+
+/* Grilla superior de estados (Cuadros de totales) */
+.stats-grid-metas {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+}
+
+.stat-box-meta {
+    padding: 1.5rem 2rem;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background-color: #1f2937;
+    border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.stat-label-meta {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.stat-monto-meta {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+/* Variaciones de color alineadas al Modo Oscuro */
+.box-total-ahorrado {
+    border-left: 6px solid #8b5cf6;
+    background: linear-gradient(180deg, rgba(139, 92, 246, 0.08) 0%, #1f2937 100%);
+}
+.box-total-ahorrado .stat-monto-meta {
+    color: #a78bfa;
+}
+
+.box-metas-activas {
+    border-left: 6px solid #10b981;
+    background: linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, #1f2937 100%);
+}
+.box-metas-activas .stat-monto-meta {
+    color: #34d399;
+}
+
+/* Estilos de Formulario Limpios e Interactivos */
+.meta-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-field label {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #d1d5db;
+}
+
+.form-field input,
+.form-field select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: #ffffff;
+    background-color: #111827;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+    border-color: #8b5cf6;
+    background-color: #111827;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
+}
+
+.form-field select option {
+    background-color: #111827;
+    color: #ffffff;
+}
+
+/* Botones con el estilo violeta/verde oscuro */
+.btn-meta-submit {
+    border: none;
+    padding: 0.85rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+    margin-top: 0.5rem;
+}
+
+.btn-purple {
+    background-color: #8b5cf6;
+    color: #FFFFFF;
+}
+.btn-purple:hover {
+    background-color: #7c3aed;
+    transform: translateY(-2px);
+}
+
+.btn-green {
+    background-color: #10b981;
+    color: #FFFFFF;
+}
+.btn-green:hover {
+    background-color: #059669;
+    transform: translateY(-2px);
+}
+
+/* Títulos de sección */
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #ffffff;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.purple-text {
+    color: #a78bfa;
+}
+
+.green-text {
+    color: #34d399;
+}
+
+/* Grilla de Tarjetas de Seguimiento */
+.metas-progress-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+.meta-progress-card {
+    padding: 1.5rem 2rem;
+    background-color: #1f2937;
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 16px;
+}
+
+.meta-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+}
+
+.meta-card-header h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.sub-text {
+    color: #9ca3af;
+    font-size: 0.85rem;
+}
+
+.btn-delete-meta {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 10px;
+    transition: all 0.2s;
+}
+
+.btn-delete-meta:hover {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+}
+
+.meta-valores {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.monto-actual {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #a78bfa;
+}
+
+.monto-objetivo {
+    font-size: 0.9rem;
+    color: #9ca3af;
+    font-weight: 500;
+}
+
+.meta-bar-container {
+    width: 100%;
+    height: 12px;
+    background-color: #111827;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.meta-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #7c3aed 0%, #a78bfa 100%);
+    border-radius: 10px;
+    transition: width 0.5s ease-out;
+}
+
+.meta-footer-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.porcentaje-text {
+    color: #a78bfa;
+}
+
+/* Responsivo */
+@media (max-width: 1024px) {
+    .metas-form-grid, .stats-grid-metas {
+        grid-template-columns: 1fr;
+    }
+}

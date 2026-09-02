@@ -1,0 +1,292 @@
+@import url('styles.css');
+
+/* =========================================================
+   CONTENEDOR INTERNO DE LA FICHA TÉCNICA
+   ========================================================= */
+.tech-dashboard-container {
+    display: grid;
+    grid-template-columns: 0.95fr 1.4fr 1.05fr;
+    gap: 20px;
+    align-items: stretch;
+    background-color: #0b0f19 !important;
+    border: 1px solid rgba(139, 92, 246, 0.25);
+    padding: 25px;
+    border-radius: 16px;
+    position: relative;
+    margin-bottom: 25px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Botón Editar Datos */
+.dashboard-edit-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #1e1b2e;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    color: #a78bfa;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s ease;
+}
+.dashboard-edit-btn:hover { 
+    background: #7c3aed; 
+    color: #fff; 
+    box-shadow: 0 0 10px rgba(124, 58, 237, 0.4);
+}
+
+.dash-panel {
+    background: #111827 !important;
+    border: 1px solid rgba(139, 92, 246, 0.2) !important;
+    border-radius: 12px;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+/* COLUMNA IZQUIERDA: Especificaciones */
+.panel-specs { display: flex; flex-direction: column; justify-content: space-between; gap: 8px; }
+.spec-row { display: flex; align-items: center; gap: 12px; padding-bottom: 6px; border-bottom: 1px dashed rgba(139, 92, 246, 0.2); }
+.spec-row:last-child { border: none; }
+.spec-icon { color: #a78bfa !important; font-size: 1rem; width: 20px; text-align: center; }
+.spec-text { display: flex; flex-direction: column; }
+.spec-text .lbl { font-size: 0.65rem; color: #9ca3af; font-family: 'Roboto Condensed', sans-serif; font-weight: 700; }
+.spec-text .val { font-size: 0.95rem; color: #ffffff !important; font-weight: 600; }
+.spec-text .highlight-blue { color: #c084fc !important; font-family: 'Oswald', sans-serif; letter-spacing: 1px; font-size: 1.1rem; }
+
+/* COLUMNA CENTRAL: Foto y Odómetro */
+.panel-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background: radial-gradient(circle at center, #1e1b2e 0%, #0b0f19 100%) !important;
+    border: 1px solid rgba(139, 92, 246, 0.25) !important;
+    text-align: center;
+}
+.main-vehicle-title { font-family: 'Oswald', sans-serif; font-size: 2.1rem; font-weight: 700; color: #fff !important; margin: 0; line-height: 1.1; }
+.sub-title-divider { font-family: 'Roboto Condensed', sans-serif; font-size: 0.85rem; color: #a78bfa; letter-spacing: 2px; border-bottom: 1px solid rgba(139, 92, 246, 0.3); width: 65%; padding-bottom: 4px; margin: 5px auto 0 auto; font-weight: 600; }
+
+.vehicle-image-wrapper { 
+    margin: 15px 0; 
+    width: 100%; 
+    max-width: 380px;
+    display: flex; 
+    justify-content: center; 
+}
+.vehicle-main-img { 
+    width: 100%; 
+    max-height: 210px;
+    object-fit: contain; 
+    filter: drop-shadow(0 15px 25px rgba(0,0,0,0.8)); 
+    transition: transform 0.3s ease;
+}
+.vehicle-main-img:hover { transform: scale(1.03); }
+
+.center-bottom-row { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 10px; width: 100%; }
+.panel-sub-label { font-size: 0.7rem; font-family: 'Roboto Condensed', sans-serif; color: #9ca3af; display: block; margin-bottom: 4px; text-align: left; }
+
+/* Odómetro digital */
+.odometer-display { background: #000 !important; border: 1px solid rgba(139, 92, 246, 0.3); padding: 4px 8px; border-radius: 6px; display: flex; gap: 2px; justify-content: center; }
+.odometer-display span { background: #111827 !important; color: #a78bfa !important; font-family: 'Oswald', sans-serif; font-size: 1.2rem; padding: 1px 5px; border-radius: 3px; border: 1px solid rgba(139, 92, 246, 0.2); }
+.odometer-display small { font-family: 'Roboto Condensed', sans-serif; color: #888; margin-left: 3px; font-size: 0.8rem; }
+
+/* VTV */
+.vtv-badge-container { background: #000 !important; border: 1px solid rgba(139, 92, 246, 0.3); padding: 4px 8px; border-radius: 6px; display: flex; align-items: center; gap: 8px; height: 38px; box-sizing: border-box; }
+.vtv-shield-icon { font-size: 1.2rem; }
+.green-glow { color: #22c55e !important; }
+.vtv-dates { display: flex; flex-direction: column; text-align: left; }
+.vtv-lbl-status { font-family: 'Oswald', sans-serif; font-size: 0.8rem; font-weight: bold; color: #22c55e; }
+.vtv-lbl-date { font-size: 0.65rem; color: #9ca3af; }
+
+/* COLUMNA DERECHA: Mantenimiento */
+.panel-maintenance { display: flex; flex-direction: column; gap: 10px; justify-content: space-between; }
+.maint-box { background: #000 !important; border: 1px solid rgba(139, 92, 246, 0.25); border-radius: 10px; padding: 10px; box-sizing: border-box; }
+.maint-header { font-family: 'Roboto Condensed', sans-serif; font-size: 0.75rem; color: #a78bfa; font-weight: 700; margin-bottom: 6px; border-bottom: 1px solid rgba(139, 92, 246, 0.2); padding-bottom: 2px; text-align: left; }
+.maint-body { display: flex; align-items: center; gap: 10px; }
+.maint-circle-icon { width: 36px; height: 36px; border-radius: 50%; border: 2px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+.icon-green { color: #22c55e !important; }
+.maint-info { display: flex; flex-direction: column; text-align: left; }
+.status-text { font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 1rem; line-height: 1.1; }
+.color-green { color: #22c55e !important; }
+.sub-info { font-size: 0.65rem; color: #64748b; margin-top: 2px; }
+.sub-val { font-size: 0.8rem; color: #9ca3af; }
+
+/* Semáforo de alertas */
+.dashboard-alert-item { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; margin-top: 4px; text-align: left; }
+.alert-green-sub { background: rgba(34,197,94,0.1); color: #22c55e; border-left: 3px solid #22c55e; }
+.alert-yellow-sub { background: rgba(234,179,8,0.1); color: #eab308; border-left: 3px solid #eab308; }
+.alert-red-sub { background: rgba(239,68,68,0.1); color: #ef4444; border-left: 3px solid #ef4444; }
+
+/* CAJA DE NAFTA GASTADA */
+.box-fuel-spent { background: #120a14 !important; border: 1px solid rgba(239, 68, 68, 0.4); position: relative; overflow: hidden; }
+.maint-body-fuel { display: flex; align-items: center; text-align: left; padding: 4px 0; }
+.fuel-total-wrapper { display: flex; flex-direction: column; z-index: 2; }
+.fuel-lbl { font-size: 0.65rem; color: #f87171; }
+.fuel-counter { font-family: 'Oswald', sans-serif; font-size: 1.5rem; color: #ef4444 !important; font-weight: 700; }
+.fuel-bg-icon { position: absolute; right: 10px; bottom: 5px; font-size: 2.2rem; color: rgba(239, 68, 68, 0.1); }
+
+/* VENTANA MODAL FLOTANTE */
+.dashboard-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: flex; align-items: center; justify-content: center; z-index: 99999; padding: 10px; box-sizing: border-box; }
+.dashboard-modal.hidden { display: none !important; }
+.modal-content-form { background: #111827; padding: 22px; border-radius: 12px; border: 1px solid rgba(139, 92, 246, 0.4); width: 100%; max-width: 440px; color: #fff; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.8); max-height: 90vh; overflow-y: auto; }
+.modal-content-form h3 { margin-top: 0; font-family: 'Oswald', sans-serif; font-size: 1.4rem; letter-spacing: 1px; margin-bottom: 15px; border-bottom: 1px solid rgba(139, 92, 246, 0.2); padding-bottom: 8px; text-align: left; color: #a78bfa; }
+.form-grid-modal { display: flex; flex-direction: column; gap: 11px; margin-bottom: 20px; }
+.fg { display: flex; flex-direction: column; }
+.fg label { font-size: 0.75rem; color: #9ca3af; margin-bottom: 4px; text-align: left; font-weight: 600; text-transform: uppercase; }
+.fg input { padding: 10px; background: #000; border: 1px solid rgba(139, 92, 246, 0.3); color: #fff; border-radius: 8px; font-family: inherit; font-size: 0.9rem; }
+.fg input:focus { border-color: #8b5cf6; outline: none; box-shadow: 0 0 8px rgba(139, 92, 246, 0.4); }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+.btn-dashboard-save { background: #7c3aed; color:#fff; border:none; padding: 9px 18px; border-radius:6px; cursor:pointer; font-weight:600; transition: all 0.2s; }
+.btn-dashboard-save:hover { background: #6d28d9; }
+.btn-dashboard-cancel { background: #1f2937; color:#fff; border:1px solid #374151; padding: 9px 18px; border-radius:6px; cursor:pointer; }
+
+/* =========================================================
+   SECCIÓN INFERIOR EN TEMA OSCURO (NEGRO Y VIOLETA)
+   ========================================================= */
+.dark-card {
+    background-color: #0b0f19 !important;
+    border: 1px solid rgba(139, 92, 246, 0.25) !important;
+    border-radius: 16px !important;
+    color: #f3f4f6 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+.dark-card h3 {
+    color: #ffffff !important;
+}
+
+.auto-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; margin-top: 25px; margin-bottom: 2rem; }
+.form-help-text { display: block; margin-top: 4px; color: #9ca3af; font-size: 0.75rem; }
+
+/* FORMULARIO REGISTRAR GASTO */
+.simple-form .form-group { margin-bottom: 15px; }
+.simple-form label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 5px; text-align: left; color: #e5e7eb; }
+.simple-form input, .simple-form select { 
+    width: 100%; 
+    padding: 12px; 
+    border: 1px solid rgba(139, 92, 246, 0.3) !important; 
+    border-radius: 12px; 
+    background: #111827 !important; 
+    color: #ffffff !important; 
+    font-family: inherit; 
+    font-size: 0.95rem; 
+    box-sizing: border-box; 
+}
+.simple-form input:focus, .simple-form select:focus {
+    border-color: #8b5cf6 !important;
+    outline: none !important;
+    box-shadow: 0 0 8px rgba(139, 92, 246, 0.4) !important;
+}
+.simple-form select option {
+    background-color: #111827 !important;
+    color: #ffffff !important;
+}
+
+.btn-primary-purple { 
+    background: linear-gradient(135deg, #7c3aed, #6d28d9) !important; 
+    color: white !important; 
+    width: 100%; 
+    padding: 14px; 
+    border-radius: 12px; 
+    border: none; 
+    cursor: pointer; 
+    font-weight: 700 !important; 
+    transition: all 0.2s ease !important;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3) !important;
+}
+.btn-primary-purple:hover {
+    background: linear-gradient(135deg, #6d28d9, #5b21b6) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* TARJETAS DE RESUMEN (STATS) */
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: 100%; }
+.stat-box { 
+    padding: 1rem 0.75rem; 
+    border-radius: 12px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 6px; 
+    background-color: #111827 !important; 
+    border: 1px solid rgba(139, 92, 246, 0.2) !important; 
+}
+.stat-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; display: flex; align-items: center; gap: 5px; color: #a78bfa !important; }
+.stat-monto { font-size: 1.25rem; font-weight: 700; color: #ffffff !important; }
+
+/* HISTORIAL DE GASTOS */
+.historial-card { padding: 1.5rem; margin-bottom: 2rem; }
+.historial-lista { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; max-height: 440px; overflow-y: auto; }
+.historial-item { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 14px 18px; 
+    border-radius: 14px; 
+    background-color: #111827 !important; 
+    border: 1px solid rgba(139, 92, 246, 0.2) !important; 
+    color: #ffffff !important;
+}
+.historial-item .historial-item-cat { color: #ffffff !important; font-weight: 700 !important; font-size: 1rem !important; }
+.historial-item .historial-meta-row span { color: #9ca3af !important; }
+.historial-icon-wrapper { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+.monto-valor { font-size: 1.1rem; font-weight: 700; color: #a78bfa !important; }
+
+.delete-btn { background: transparent !important; border: none !important; color: #ef4444 !important; cursor: pointer; padding: 8px; border-radius: 8px; opacity: 0.7; transition: opacity 0.2s ease; }
+.delete-btn:hover { opacity: 1; background-color: rgba(239, 68, 68, 0.1) !important; }
+
+/* Categorías del Historial */
+.historial-item.cat-red { border-left: 4px solid #ef4444 !important; } .historial-item.cat-red .historial-icon-wrapper { background-color: rgba(239, 68, 68, 0.2); color: #ef4444; }
+.historial-item.cat-blue { border-left: 4px solid #3b82f6 !important; } .historial-item.cat-blue .historial-icon-wrapper { background-color: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+.historial-item.cat-purple { border-left: 4px solid #8b5cf6 !important; } .historial-item.cat-purple .historial-icon-wrapper { background-color: rgba(139, 92, 246, 0.2); color: #a78bfa; }
+.historial-item.cat-green { border-left: 4px solid #10b981 !important; } .historial-item.cat-green .historial-icon-wrapper { background-color: rgba(16, 185, 129, 0.2); color: #10b981; }
+.historial-item.cat-gray { border-left: 4px solid #6b7280 !important; } .historial-item.cat-gray .historial-icon-wrapper { background-color: rgba(107, 114, 128, 0.2); color: #9ca3af; }
+
+/* ==========================================
+   BOTONES DE FILTRO (ESTE MES / AÑO)
+   ========================================== */
+.modern-subtle-toggle {
+    background: #111827 !important;
+    border: 1px solid rgba(139, 92, 246, 0.3) !important;
+    padding: 3px;
+    border-radius: 8px;
+    display: flex;
+    gap: 2px;
+}
+
+.btn-subtle {
+    background: transparent !important;
+    border: none !important;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #9ca3af !important;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-subtle:hover {
+    color: #ffffff !important;
+}
+
+.btn-subtle.active {
+    background: #7c3aed !important;
+    color: #ffffff !important; 
+    box-shadow: 0 0 10px rgba(124, 58, 237, 0.5) !important;
+    font-weight: 700;
+}
+
+@media (max-width: 1024px) {
+    .tech-dashboard-container { grid-template-columns: 1fr; gap: 15px; }
+    .auto-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+    .stats-grid { grid-template-columns: 1fr; }
+    .center-bottom-row { grid-template-columns: 1fr; }
+}

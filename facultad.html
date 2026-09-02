@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo Facultad</title>
+  
+  <!-- Fonts & Font Awesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <link rel="stylesheet" href="facultad.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- HEADER CON RETORNO DIRECTO Y TÍTULO UNIFICADO -->
+    <header class="top-header">
+      <a href="index.html" class="btn-back-clean" title="Volver al inicio">
+        <i class="fa-solid fa-arrow-left"></i>
+      </a>
+      <div class="header-title-box">
+        <div class="header-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+        <h1>Módulo <span>Facultad</span></h1>
+      </div>
+    </header>
+
+    <!-- RESUMEN / KPI DASHBOARD -->
+    <section class="kpi-grid">
+      <div class="kpi-card kpi-purple">
+        <div class="kpi-icon"><i class="fa-solid fa-wallet"></i></div>
+        <div class="kpi-info">
+          <span class="kpi-label">Gastos Facultad</span>
+          <h3 class="kpi-value" id="kpi-total-gastos">$0,00</h3>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-orange">
+        <div class="kpi-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+        <div class="kpi-info">
+          <span class="kpi-label">Próximos Exámenes/TPs</span>
+          <h3 class="kpi-value" id="kpi-entregas-pendientes">0</h3>
+        </div>
+      </div>
+
+      <div class="kpi-card kpi-green">
+        <div class="kpi-icon"><i class="fa-solid fa-book-open"></i></div>
+        <div class="kpi-info">
+          <span class="kpi-label">Materias Cursando</span>
+          <h3 class="kpi-value" id="kpi-materias-activas">0</h3>
+        </div>
+      </div>
+    </section>
+
+    <!-- BANNER DE ALERTAS (< 48 HS) -->
+    <div id="seccion-alertas-facultad">
+      <!-- Se genera dinámicamente si hay entregas cerca -->
+    </div>
+
+    <!-- NAVEGACIÓN POR PESTAÑAS (ÚNICA Y DIRECTA) -->
+    <nav class="sub-nav-bar">
+      <button class="sub-nav-btn active" id="btn-sub-fac-gastos" onclick="switchFacultadSubTab('fac-gastos')">
+        <i class="fa-solid fa-wallet"></i> Mis Gastos
+      </button>
+      <button class="sub-nav-btn" id="btn-sub-fac-materias" onclick="switchFacultadSubTab('fac-materias')">
+        <i class="fa-solid fa-book"></i> Mis Materias
+      </button>
+      <button class="sub-nav-btn" id="btn-sub-fac-horarios" onclick="switchFacultadSubTab('fac-horarios')">
+        <i class="fa-solid fa-calendar-days"></i> Calendario & Horarios
+      </button>
+    </nav>
+
+    <!-- 1. SECCIÓN MIS GASTOS -->
+    <div id="fac-gastos" class="sub-view-section active">
+      
+      <div class="card">
+        <div class="card-title">
+          <i class="fa-solid fa-circle-plus"></i> Registrar Nuevo Gasto
+        </div>
+        <form id="form-gasto-facultad" onsubmit="guardarGastoFacultad(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="fac-gasto-monto">Monto ($)</label>
+              <input type="number" step="0.01" id="fac-gasto-monto" placeholder="Ej: 3500" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="fac-gasto-categoria">Categoría</label>
+              <input type="text" id="fac-gasto-categoria" placeholder="Ej: Fotocopias, Libros, Comida, Transporte..." required>
+            </div>
+
+            <div class="form-group">
+              <label for="fac-gasto-fecha">Fecha</label>
+              <input type="date" id="fac-gasto-fecha" required>
+            </div>
+
+            <div class="form-group">
+              <label for="fac-gasto-descripcion">Descripción / Detalle</label>
+              <input type="text" id="fac-gasto-descripcion" placeholder="Ej: Apuntes de Historia">
+            </div>
+
+            <div class="form-group full-width">
+              <button type="submit" class="btn-submit">
+                <i class="fa-solid fa-plus"></i> Guardar Gasto
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-title-flex">
+          <span><i class="fa-solid fa-list-check"></i> Historial de Gastos</span>
+          <span class="total-badge" id="total-gastos-facultad">$0.00</span>
+        </div>
+        
+        <div id="lista-gastos-facultad"></div>
+      </div>
+
+    </div>
+
+    <!-- 2. SECCIÓN MIS MATERIAS -->
+    <div id="fac-materias" class="sub-view-section">
+      <div class="card">
+        <div class="card-title"><i class="fa-solid fa-book-bookmark"></i> Registrar Nueva Materia</div>
+        <form id="form-materia" onsubmit="guardarMateria(event)">
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label for="fac-materia-nombre">Nombre de la Materia</label>
+              <input type="text" id="fac-materia-nombre" placeholder="Ej: Álgebra, Programación I..." required>
+            </div>
+            <div class="form-group">
+              <label for="fac-materia-dia">Día de Cursada</label>
+              <select id="fac-materia-dia" required>
+                <option value="Lunes">Lunes</option>
+                <option value="Martes">Martes</option>
+                <option value="Miércoles">Miércoles</option>
+                <option value="Jueves">Jueves</option>
+                <option value="Viernes">Viernes</option>
+                <option value="Sábado">Sábado</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="fac-materia-color">Color Identificador</label>
+              <input type="color" id="fac-materia-color" value="#8b5cf6" required>
+            </div>
+            <div class="form-group">
+              <label for="fac-hora-inicio">Hora de Inicio</label>
+              <input type="time" id="fac-hora-inicio" value="18:00" required>
+            </div>
+            <div class="form-group">
+              <label for="fac-hora-fin">Hora de Fin</label>
+              <input type="time" id="fac-hora-fin" value="22:00" required>
+            </div>
+            <div class="form-group full-width">
+              <label for="fac-materia-aula">Aula / Comisión / Sede (Opcional)</label>
+              <input type="text" id="fac-materia-aula" placeholder="Ej: Aula 204 - Com. B">
+            </div>
+            <div class="form-group full-width">
+              <button type="submit" class="btn-submit"><i class="fa-solid fa-plus"></i> Guardar Materia</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="fa-solid fa-layer-group"></i> Materias Cursando</div>
+        <div id="lista-materias-cargadas"></div>
+      </div>
+    </div>
+
+    <!-- 3. SECCIÓN CALENDARIO Y HORARIOS -->
+    <div id="fac-horarios" class="sub-view-section">
+      <div class="card">
+        <div class="card-title"><i class="fa-solid fa-calendar-week"></i> Horario Semanal de Cursada</div>
+        <div class="horarios-scroll-wrapper">
+          <div class="grid-dias-horarios" id="grid-horarios-semanal"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="fa-solid fa-calendar-days"></i> Calendario Mensual de Entregas</div>
+        
+        <div class="cal-header-bar">
+          <button class="cal-nav-btn" onclick="cambiarMesCalendario(-1)"><i class="fa-solid fa-chevron-left"></i> Anterior</button>
+          <h3 id="cal-titulo-mes">-- ----</h3>
+          <button class="cal-nav-btn" onclick="cambiarMesCalendario(1)">Siguiente <i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+
+        <div class="cal-grid-wrapper">
+          <div class="cal-grid-month" id="cal-grid-dias"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MODAL DE DETALLE DE ENTREGA -->
+  <div id="modal-detalle-cal" class="modal-overlay" onclick="cerrarModalCalOverlay(event)">
+    <div class="modal-contenido">
+      <button class="btn-cerrar-modal" onclick="cerrarModalCal()"><i class="fa-solid fa-xmark"></i></button>
+      <span class="modal-badge-tipo" id="cal-modal-tipo">Trabajo Práctico</span>
+      <h2 id="cal-modal-materia">Materia</h2>
+      
+      <div class="modal-info-box">
+        <label><i class="fa-regular fa-calendar"></i> Fecha de Entrega</label>
+        <p id="cal-modal-fecha">--/--/----</p>
+      </div>
+
+      <div class="modal-info-box">
+        <label><i class="fa-solid fa-align-left"></i> Temas / Detalles</label>
+        <p id="cal-modal-descripcion">Sin temas detallados.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let materiasFacultad = JSON.parse(localStorage.getItem('facultad_materias')) || [];
+    let entregasFacultad = JSON.parse(localStorage.getItem('facultad_entregas')) || [];
+    let gastosFacultad = JSON.parse(localStorage.getItem('facultad_gastos')) || [];
+    let fechaCalendarioActual = new Date(); 
+
+    function switchFacultadSubTab(subTabId) {
+      document.querySelectorAll('.sub-nav-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.sub-view-section').forEach(sec => sec.classList.remove('active'));
+
+      const targetSection = document.getElementById(subTabId);
+      const targetBtn = document.getElementById('btn-sub-' + subTabId);
+
+      if(targetSection) targetSection.classList.add('active');
+      if(targetBtn) targetBtn.classList.add('active');
+
+      if (subTabId === 'fac-gastos') {
+        renderGastosFacultad();
+      } else if (subTabId === 'fac-materias') {
+        renderMaterias();
+      } else if (subTabId === 'fac-horarios') {
+        renderHorariosSemana();
+        renderCalendarioMensual();
+      }
+    }
+
+    function actualizarKPICards() {
+      // Total gastos
+      const totalGastado = gastosFacultad.reduce((acc, g) => acc + g.monto, 0);
+      document.getElementById('kpi-total-gastos').textContent = `$${totalGastado.toLocaleString('es-AR', {minimumFractionDigits: 2})}`;
+
+      // Materias activas
+      document.getElementById('kpi-materias-activas').textContent = materiasFacultad.length;
+
+      // Entregas futuras
+      const hoyStr = new Date().toISOString().split('T')[0];
+      const entregasFuturas = entregasFacultad.filter(e => e.fecha >= hoyStr);
+      document.getElementById('kpi-entregas-pendientes').textContent = entregasFuturas.length;
+
+      // Generar Alertas Próximas (< 48 horas)
+      renderAlertasProximas();
+    }
+
+    function renderAlertasProximas() {
+      const contenedor = document.getElementById('seccion-alertas-facultad');
+      if (!contenedor) return;
+
+      const hoy = new Date();
+      const limite48h = new Date(hoy.getTime() + (48 * 60 * 60 * 1000));
+
+      const entregasUrgentes = entregasFacultad.filter(e => {
+        const fechaE = new Date(e.fecha + 'T23:59:59');
+        return fechaE >= hoy && fechaE <= limite48h;
+      });
+
+      if (entregasUrgentes.length === 0) {
+        contenedor.innerHTML = '';
+        return;
+      }
+
+      let html = '<div class="alerts-container">';
+      entregasUrgentes.forEach(e => {
+        const mat = materiasFacultad.find(m => m.id === e.materiaId) || { nombre: 'Materia' };
+        const fParts = e.fecha.split('-');
+        const fechaFmt = `${fParts[2]}/${fParts[1]}`;
+
+        html += `
+          <div class="alert-card">
+            <div class="alert-info">
+              <h4><i class="fa-solid fa-triangle-exclamation"></i> ¡Próxima Entrega / Examen! (${mat.nombre})</h4>
+              <p>${e.tipo}: ${e.descripcion} - Fecha: <b>${fechaFmt}</b></p>
+            </div>
+            <span class="alert-badge">Urgente</span>
+          </div>
+        `;
+      });
+      html += '</div>';
+      contenedor.innerHTML = html;
+    }
+
+    /* GASTOS */
+    function guardarGastoFacultad(e) {
+      e.preventDefault();
+      const monto = parseFloat(document.getElementById('fac-gasto-monto').value);
+      const categoria = document.getElementById('fac-gasto-categoria').value.trim();
+      const fecha = document.getElementById('fac-gasto-fecha').value;
+      const descripcion = document.getElementById('fac-gasto-descripcion').value.trim();
+
+      if (!monto || !categoria || !fecha) return;
+
+      const nuevoGasto = {
+        id: Date.now().toString(),
+        monto,
+        categoria,
+        fecha,
+        descripcion: descripcion || 'Sin detalle'
+      };
+
+      gastosFacultad.push(nuevoGasto);
+      localStorage.setItem('facultad_gastos', JSON.stringify(gastosFacultad));
+
+      document.getElementById('fac-gasto-monto').value = '';
+      document.getElementById('fac-gasto-categoria').value = '';
+      document.getElementById('fac-gasto-descripcion').value = '';
+
+      renderGastosFacultad();
+      actualizarKPICards();
+    }
+
+    function eliminarGastoFacultad(id) {
+      gastosFacultad = gastosFacultad.filter(g => g.id !== id);
+      localStorage.setItem('facultad_gastos', JSON.stringify(gastosFacultad));
+      renderGastosFacultad();
+      actualizarKPICards();
+    }
+
+    function renderGastosFacultad() {
+      const container = document.getElementById('lista-gastos-facultad');
+      const totalEl = document.getElementById('total-gastos-facultad');
+      if (!container || !totalEl) return;
+
+      if (gastosFacultad.length === 0) {
+        container.innerHTML = '<div class="empty-state">No has registrado ningún gasto de facultad.</div>';
+        totalEl.textContent = '$0.00';
+        return;
+      }
+
+      gastosFacultad.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+      let total = 0;
+      let html = '<div style="display: flex; flex-direction: column; gap: 0.75rem;">';
+
+      gastosFacultad.forEach(g => {
+        total += g.monto;
+        const fParts = g.fecha.split('-');
+        const fFormateada = fParts.length === 3 ? `${fParts[2]}/${fParts[1]}/${fParts[0]}` : g.fecha;
+
+        html += `
+          <div class="materia-entrega-item" style="padding: 0.85rem; background: var(--bg-input);">
+            <div>
+              <div style="font-weight: 700; color: #fff; font-size: 0.95rem;">
+                ${g.categoria}
+              </div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.15rem;">
+                ${g.descripcion} • <i class="fa-regular fa-calendar"></i> ${fFormateada}
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <span style="font-weight: 800; font-size: 1.05rem; color: var(--expense);">$${g.monto.toLocaleString('es-AR', {minimumFractionDigits: 2})}</span>
+              <button class="btn-delete" onclick="eliminarGastoFacultad('${g.id}')" title="Eliminar gasto"><i class="fa-solid fa-trash-can"></i></button>
+            </div>
+          </div>
+        `;
+      });
+
+      html += '</div>';
+      container.innerHTML = html;
+      totalEl.textContent = `$${total.toLocaleString('es-AR', {minimumFractionDigits: 2})}`;
+    }
+
+    /* MATERIAS */
+    function guardarMateria(e) {
+      e.preventDefault();
+      const nombre = document.getElementById('fac-materia-nombre').value.trim();
+      const dia = document.getElementById('fac-materia-dia').value;
+      const color = document.getElementById('fac-materia-color').value;
+      const hInicio = document.getElementById('fac-hora-inicio').value;
+      const hFin = document.getElementById('fac-hora-fin').value;
+      const aula = document.getElementById('fac-materia-aula').value.trim();
+
+      if (!nombre) return;
+
+      const nuevaMateria = {
+        id: Date.now().toString(),
+        nombre,
+        dia,
+        color,
+        hInicio,
+        hFin,
+        aula
+      };
+
+      materiasFacultad.push(nuevaMateria);
+      localStorage.setItem('facultad_materias', JSON.stringify(materiasFacultad));
+
+      document.getElementById('fac-materia-nombre').value = '';
+      document.getElementById('fac-materia-aula').value = '';
+      
+      renderMaterias();
+      actualizarKPICards();
+    }
+
+    function eliminarMateria(id) {
+      materiasFacultad = materiasFacultad.filter(m => m.id !== id);
+      entregasFacultad = entregasFacultad.filter(e => e.materiaId !== id);
+      localStorage.setItem('facultad_materias', JSON.stringify(materiasFacultad));
+      localStorage.setItem('facultad_entregas', JSON.stringify(entregasFacultad));
+      renderMaterias();
+      actualizarKPICards();
+    }
+
+    function guardarEntregaEspecifica(materiaId) {
+      const tipo = document.getElementById(`sub-tipo-${materiaId}`).value;
+      const fecha = document.getElementById(`sub-fecha-${materiaId}`).value;
+      const descripcion = document.getElementById(`sub-descripcion-${materiaId}`).value.trim();
+
+      if (!fecha) {
+        alert('Por favor, selecciona una fecha para la entrega.');
+        return;
+      }
+
+      const nuevaEntrega = {
+        id: Date.now().toString(),
+        materiaId,
+        tipo,
+        fecha,
+        descripcion: descripcion || 'Sin temas detallados.'
+      };
+
+      entregasFacultad.push(nuevaEntrega);
+      localStorage.setItem('facultad_entregas', JSON.stringify(entregasFacultad));
+
+      renderMaterias();
+      actualizarKPICards();
+    }
+
+    function eliminarEntrega(id) {
+      entregasFacultad = entregasFacultad.filter(e => e.id !== id);
+      localStorage.setItem('facultad_entregas', JSON.stringify(entregasFacultad));
+      renderMaterias();
+      renderCalendarioMensual();
+      actualizarKPICards();
+    }
+
+    function renderMaterias() {
+      const listContainer = document.getElementById('lista-materias-cargadas');
+      if (!listContainer) return;
+
+      listContainer.innerHTML = materiasFacultad.length === 0 ? '<div class="empty-state">No tienes materias registradas aún.</div>' : '';
+
+      const hoy = new Date().toISOString().split('T')[0];
+
+      materiasFacultad.forEach(m => {
+        const item = document.createElement('div');
+        item.className = 'materia-card-item';
+        item.style.borderLeftColor = m.color;
+
+        const entregasMateria = entregasFacultad.filter(e => e.materiaId === m.id);
+        entregasMateria.sort((a,b) => new Date(a.fecha) - new Date(b.fecha));
+
+        let htmlEntregas = entregasMateria.length === 0 ? '<div style="color:var(--text-muted); font-size:0.75rem;">Sin entregas agendadas</div>' : '';
+        entregasMateria.forEach(e => {
+          const fParts = e.fecha.split('-');
+          const fFormateada = fParts.length === 3 ? `${fParts[2]}/${fParts[1]}` : e.fecha;
+          htmlEntregas += `
+            <div class="materia-entrega-item">
+              <div style="display:flex; align-items:center; gap:0.4rem;">
+                <span class="txt"><b>[${e.tipo}]</b> ${e.descripcion}</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:0.5rem;">
+                <span style="font-size:0.72rem; color:var(--text-muted);">${fFormateada}</span>
+                <button class="btn-delete" onclick="eliminarEntrega('${e.id}')"><i class="fa-solid fa-xmark"></i></button>
+              </div>
+            </div>
+          `;
+        });
+
+        item.innerHTML = `
+          <div class="materia-header-flex">
+            <div class="materia-info">
+              <h4>
+                <span class="materia-badge" style="background-color: ${m.color}">
+                  <span class="dot"></span> ${m.nombre}
+                </span>
+              </h4>
+              <p style="margin-top: 0.4rem;">
+                <i class="fa-regular fa-clock"></i> <b>${m.dia}s</b> de ${m.hInicio} a ${m.hFin} hs
+                ${m.aula ? `• <i class="fa-solid fa-location-dot"></i> ${m.aula}` : ''}
+              </p>
+            </div>
+            <button class="btn-delete" onclick="eliminarMateria('${m.id}')" title="Eliminar materia"><i class="fa-solid fa-trash-can"></i></button>
+          </div>
+
+          <div class="materia-sub-sections">
+            <div class="materia-sub-box">
+              <div class="materia-sub-title"><i class="fa-solid fa-plus-circle"></i> Cargar Trabajo / Entrega</div>
+              <div class="sub-form-entrega">
+                <select id="sub-tipo-${m.id}">
+                  <option value="Trabajo Práctico">Trabajo Práctico</option>
+                  <option value="Examen">Examen</option>
+                  <option value="Entrega Final">Entrega Final</option>
+                  <option value="Parcial">Parcial</option>
+                  <option value="Otro">Otro</option>
+                </select>
+                <input type="date" id="sub-fecha-${m.id}" value="${hoy}">
+                <textarea id="sub-descripcion-${m.id}" placeholder="Descripción / Temas a estudiar..."></textarea>
+                <button type="button" class="btn-sub-add" onclick="guardarEntregaEspecifica('${m.id}')">+ Agendar a ${m.nombre}</button>
+              </div>
+            </div>
+
+            <div class="materia-sub-box">
+              <div class="materia-sub-title"><i class="fa-solid fa-list-check"></i> Entregas & Trabajos</div>
+              <div class="materia-entregas-list">
+                ${htmlEntregas}
+              </div>
+            </div>
+          </div>
+        `;
+        listContainer.appendChild(item);
+      });
+    }
+
+    /* HORARIOS Y CALENDARIO */
+    function renderHorariosSemana() {
+      const container = document.getElementById('grid-horarios-semanal');
+      if (!container) return;
+
+      const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+      container.innerHTML = '';
+
+      diasSemana.forEach(dia => {
+        const col = document.createElement('div');
+        col.className = 'dia-columna';
+
+        let htmlMateria = `<div class="dia-titulo">${dia}</div>`;
+        const materiasDia = materiasFacultad.filter(m => m.dia === dia);
+
+        if (materiasDia.length === 0) {
+          htmlMateria += `<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 1rem 0;">Libre</div>`;
+        } else {
+          materiasDia.forEach(m => {
+            htmlMateria += `
+              <div style="background: var(--bg-card); padding: 0.65rem 0.5rem; border-radius: var(--radius-sm); margin-bottom: 0.5rem; border-left: 3px solid ${m.color}; border-top: 1px solid var(--border-color); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+                <div style="font-weight: 700; font-size: 0.85rem; color: #fff;">${m.nombre}</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-top: 0.2rem;">${m.hInicio} - ${m.hFin}</div>
+                ${m.aula ? `<div style="font-size: 0.72rem; color: var(--text-muted);">${m.aula}</div>` : ''}
+              </div>
+            `;
+          });
+        }
+
+        col.innerHTML = htmlMateria;
+        container.appendChild(col);
+      });
+    }
+
+    function cambiarMesCalendario(delta) {
+      fechaCalendarioActual.setMonth(fechaCalendarioActual.getMonth() + delta);
+      renderCalendarioMensual();
+    }
+
+    function renderCalendarioMensual() {
+      const grid = document.getElementById('cal-grid-dias');
+      const tituloMes = document.getElementById('cal-titulo-mes');
+      if (!grid || !tituloMes) return;
+
+      grid.innerHTML = '';
+
+      const año = fechaCalendarioActual.getFullYear();
+      const mes = fechaCalendarioActual.getMonth();
+
+      const opcionesMes = { month: 'long', year: 'numeric' };
+      tituloMes.textContent = fechaCalendarioActual.toLocaleDateString('es-ES', opcionesMes);
+
+      const diasSemana = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+      diasSemana.forEach(d => {
+        const h = document.createElement('div');
+        h.className = 'cal-day-header';
+        h.textContent = d;
+        grid.appendChild(h);
+      });
+
+      const primerDiaMes = new Date(año, mes, 1);
+      const ultimoDiaMes = new Date(año, mes + 1, 0);
+
+      let primerDiaSemana = primerDiaMes.getDay() - 1;
+      if (primerDiaSemana === -1) primerDiaSemana = 6;
+
+      const totalDiasMes = ultimoDiaMes.getDate();
+      const hoyStr = new Date().toISOString().split('T')[0];
+
+      const mesAnteriorUltimoDia = new Date(año, mes, 0).getDate();
+      for (let i = primerDiaSemana - 1; i >= 0; i--) {
+        const cell = document.createElement('div');
+        cell.className = 'cal-day-cell other-month';
+        cell.innerHTML = `<span class="cal-day-num">${mesAnteriorUltimoDia - i}</span>`;
+        grid.appendChild(cell);
+      }
+
+      for (let dia = 1; dia <= totalDiasMes; dia++) {
+        const cell = document.createElement('div');
+        
+        const mesFormatted = String(mes + 1).padStart(2, '0');
+        const diaFormatted = String(dia).padStart(2, '0');
+        const fechaStr = `${año}-${mesFormatted}-${diaFormatted}`;
+
+        cell.className = 'cal-day-cell';
+        if (fechaStr === hoyStr) cell.classList.add('today');
+
+        let cellContent = `<span class="cal-day-num">${dia}</span>`;
+
+        const entregasDia = entregasFacultad.filter(e => e.fecha === fechaStr);
+
+        entregasDia.forEach(e => {
+          const mat = materiasFacultad.find(m => m.id === e.materiaId) || { color: '#8b5cf6', nombre: 'Materia' };
+          
+          const matEsc = mat.nombre.replace(/'/g, "\\'");
+          const tipoEsc = e.tipo.replace(/'/g, "\\'");
+          const fechaEsc = e.fecha.replace(/'/g, "\\'");
+          const descEsc = (e.descripcion || 'Sin temas detallados.').replace(/'/g, "\\'").replace(/\n/g, "\\n");
+
+          cellContent += `
+            <div class="cal-event-pill" 
+                 style="background-color: ${mat.color};" 
+                 onclick="abrirModalDetalle('${matEsc}', '${tipoEsc}', '${fechaEsc}', '${descEsc}')">
+              ${mat.nombre}<br>${e.tipo}
+            </div>
+          `;
+        });
+
+        cell.innerHTML = cellContent;
+        grid.appendChild(cell);
+      }
+
+      const totalCasillasRellenadas = primerDiaSemana + totalDiasMes;
+      const casillasRestantes = (7 - (totalCasillasRellenadas % 7)) % 7;
+
+      for (let i = 1; i <= casillasRestantes; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'cal-day-cell other-month';
+        cell.innerHTML = `<span class="cal-day-num">${i}</span>`;
+        grid.appendChild(cell);
+      }
+    }
+
+    function abrirModalDetalle(materia, tipo, fecha, descripcion) {
+      document.getElementById('cal-modal-materia').textContent = materia;
+      document.getElementById('cal-modal-tipo').textContent = tipo;
+      
+      const parts = fecha.split('-');
+      const fechaFormateada = parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : fecha;
+      document.getElementById('cal-modal-fecha').textContent = fechaFormateada;
+      document.getElementById('cal-modal-descripcion').textContent = descripcion;
+
+      document.getElementById('modal-detalle-cal').style.display = 'flex';
+    }
+
+    function cerrarModalCal() {
+      document.getElementById('modal-detalle-cal').style.display = 'none';
+    }
+
+    function cerrarModalCalOverlay(event) {
+      if (event.target.classList.contains('modal-overlay')) {
+        cerrarModalCal();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const hoy = new Date().toISOString().split('T')[0];
+      const inputFecha = document.getElementById('fac-gasto-fecha');
+      if (inputFecha) inputFecha.value = hoy;
+
+      actualizarKPICards();
+      renderGastosFacultad();
+    });
+  </script>
+</body>
+</html>

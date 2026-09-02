@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hogar</title>
+    <link rel="icon" type="image/png" href="logo2.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="hogar.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- BOTÓN DE RETORNO SOLO Y CIRCULAR -->
+        <div class="icon-circle purple-light" style="cursor:pointer; margin-bottom: 1.5rem;" onclick="window.location.href='index.html'" title="Volver al inicio">
+            <i class="fas fa-arrow-left"></i>
+        </div>
+
+        <main>
+            <div class="hogar-banner-card">
+                <img src="assets/cocina.jpg" alt="Mi Cocina Comedor" class="banner-img" onerror="this.src='https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=80'">
+                <div class="banner-overlay">
+                    <h2><i class="fas fa-home"></i> Mi Hogar</h2>
+                    <p>Administración y control de gastos de la vivienda</p>
+                </div>
+            </div>
+
+            <div class="card stats-card">
+                <div class="stats-header">
+                    <h3><i class="fas fa-chart-bar text-purple"></i> Resumen de Gastos</h3>
+                    <div class="stats-toggle">
+                        <button id="btn-stats-mes" class="btn-toggle active" onclick="cambiarPeriodoStats('mes')">Este Mes</button>
+                        <button id="btn-stats-anio" class="btn-toggle" onclick="cambiarPeriodoStats('anio')">Este Año</button>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-box box-total">
+                        <span class="stat-label">Total Acumulado</span>
+                        <span class="stat-monto" id="stat-total-monto">$0,00</span>
+                    </div>
+                    <div class="stat-box box-servicios">
+                        <span class="stat-label"><i class="fas fa-bolt"></i> Servicios Básicos</span>
+                        <span class="stat-monto" id="stat-servicios-monto">$0,00</span>
+                    </div>
+                    <div class="stat-box box-super">
+                        <span class="stat-label"><i class="fas fa-shopping-cart"></i> Super y Limpieza</span>
+                        <span class="stat-monto" id="stat-super-monto">$0,00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hogar-main-grid">
+                
+                <div class="card form-card-contenedor">
+                    <div class="widget-header">
+                        <h3><i class="fas fa-plus-circle text-purple"></i> Registrar Gasto del Hogar</h3>
+                    </div>
+                    <form id="form-gasto-hogar" class="simple-form">
+                        <div class="form-group">
+                            <label for="hogar-fecha">Fecha</label>
+                            <input type="date" id="hogar-fecha" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="hogar-categoria">Categoría</label>
+                            <select id="hogar-categoria" required>
+                                <option value="" disabled selected>Selecciona una categoría...</option>
+                                <optgroup label="⚡ Servicios Básicos" class="group-servicios">
+                                    <option value="Luz">Luz</option>
+                                    <option value="Gas">Gas</option>
+                                    <option value="Agua">Agua</option>
+                                    <option value="Internet">Internet</option>
+                                    <option value="Cable">Cable</option>
+                                    <option value="Celular">Celular</option>
+                                    <option value="Netflix">Netflix</option>
+                                    <option value="Alquiler">Alquiler</option>
+                                    <option value="Expensas">Expensas</option>
+                                    <option value="Impuestos">Impuestos</option>
+                                    <option value="Monotributo">Monotributo</option>
+                                </optgroup>
+                                <optgroup label="🛒 Súper y Limpieza" class="group-super">
+                                    <option value="Compras del supermercado">Compras del supermercado</option>
+                                    <option value="Limpieza">Limpieza</option>
+                                </optgroup>
+                                <optgroup label="🏡 Equipamiento y Otros" class="group-total">
+                                    <option value="Peluquería">Peluquería</option>
+                                    <option value="Electrodomésticos">Electrodomésticos</option>
+                                    <option value="Muebles">Muebles</option>
+                                    <option value="Reparaciones">Reparaciones</option>
+                                    <option value="Pintura">Pintura</option>
+                                    <option value="Jardín">Jardín</option>
+                                    <option value="Herramientas">Herramientas</option>
+                                    <option value="Decoración">Decoración</option>
+                                    <option value="Mantenimiento de tarjeta">Mantenimiento de tarjeta</option>
+                                    <option value="Otros">Otros</option>
+                                </optgroup>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="hogar-monto">Monto ($)</label>
+                            <input type="number" step="0.01" id="hogar-monto" placeholder="Ej: 12500" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="hogar-descripcion">Descripción / Concepto</label>
+                            <input type="text" id="hogar-descripcion" placeholder="Ej: Factura Junio o Compra mensual" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="hogar-observaciones">Observaciones adicionales</label>
+                            <input type="text" id="hogar-observaciones" placeholder="Ej: Pagado con tarjeta de débito...">
+                        </div>
+
+                        <button type="submit" class="btn-submit-hogar">Guardar Gasto Hogar</button>
+                    </form>
+                </div>
+
+                <div class="hogar-right-column">
+                    <div class="card historial-card-contenedor">
+                        <div class="widget-header">
+                            <h3><i class="fas fa-history text-purple"></i> Historial de Gastos del Hogar</h3>
+                        </div>
+                        <div class="historial-lista" id="historial-gastos-hogar">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let gastosHogarGlobal = JSON.parse(localStorage.getItem('gastos_hogar_datos')) || [];
+        let periodoActualStats = 'mes';
+
+        const catsServicios = ['Luz', 'Gas', 'Agua', 'Internet', 'Cable', 'Alquiler', 'Expensas', 'Impuestos', 'Celular', 'Netflix', 'Monotributo'];
+        const catsSuper = ['Compras del supermercado', 'Limpieza'];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('hogar-fecha').value = new Date().toISOString().split('T')[0];
+            renderizarHistorialHogar();
+            calcularEstadisticas();
+        });
+
+        document.getElementById('form-gasto-hogar').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const nuevoGasto = {
+                id: Date.now(),
+                fecha: document.getElementById('hogar-fecha').value,
+                categoria: document.getElementById('hogar-categoria').value,
+                monto: parseFloat(document.getElementById('hogar-monto').value),
+                descripcion: document.getElementById('hogar-descripcion').value,
+                observaciones: document.getElementById('hogar-observaciones').value || ''
+            };
+
+            gastosHogarGlobal.unshift(nuevoGasto);
+            localStorage.setItem('gastos_hogar_datos', JSON.stringify(gastosHogarGlobal));
+
+            document.getElementById('form-gasto-hogar').reset();
+            document.getElementById('hogar-fecha').value = new Date().toISOString().split('T')[0];
+
+            renderizarHistorialHogar();
+            calcularEstadisticas();
+        });
+
+        function cambiarPeriodoStats(periodo) {
+            periodoActualStats = periodo;
+            document.getElementById('btn-stats-mes').classList.toggle('active', periodo === 'mes');
+            document.getElementById('btn-stats-anio').classList.toggle('active', periodo === 'anio');
+            calcularEstadisticas();
+        }
+
+        function calcularEstadisticas() {
+            const hoy = new Date();
+            const mesActual = hoy.getMonth();
+            const anioActual = hoy.getFullYear();
+
+            const gastosFiltrados = gastosHogarGlobal.filter(g => {
+                const fechaGasto = new Date(g.fecha + 'T00:00:00');
+                if (periodoActualStats === 'mes') {
+                    return fechaGasto.getMonth() === mesActual && fechaGasto.getFullYear() === anioActual;
+                } else {
+                    return fechaGasto.getFullYear() === anioActual;
+                }
+            });
+
+            let total = 0;
+            let servicios = 0;
+            let superMercado = 0;
+
+            gastosFiltrados.forEach(g => {
+                total += g.monto;
+                if (catsServicios.includes(g.categoria)) servicios += g.monto;
+                if (catsSuper.includes(g.categoria)) superMercado += g.monto;
+            });
+
+            document.getElementById('stat-total-monto').textContent = `$${total.toLocaleString('es-AR', { minimumFractionDigits: 2 })}`;
+            document.getElementById('stat-servicios-monto').textContent = `$${servicios.toLocaleString('es-AR', { minimumFractionDigits: 2 })}`;
+            document.getElementById('stat-super-monto').textContent = `$${superMercado.toLocaleString('es-AR', { minimumFractionDigits: 2 })}`;
+        }
+
+        function renderizarHistorialHogar() {
+            const listaElement = document.getElementById('historial-gastos-hogar');
+            
+            if (gastosHogarGlobal.length === 0) {
+                listaElement.innerHTML = `<p class="text-muted text-center" style="padding: 1.5rem; margin: 0; color: #9ca3af; text-align: center;">No hay gastos de hogar registrados aún.</p>`;
+                return;
+            }
+
+            listaElement.innerHTML = gastosHogarGlobal.map(g => {
+                const fechaVisual = g.fecha.split('-').reverse().join('/');
+                const textoDetalle = g.observaciones ? `${g.descripcion} — ${g.observaciones}` : g.descripcion;
+
+                let iconoCat = 'fa-home';
+                if(g.categoria === 'Agua') iconoCat = 'fa-tint';
+                if(g.categoria === 'Luz') iconoCat = 'fa-bolt';
+                if(g.categoria === 'Gas') iconoCat = 'fa-fire';
+                if(g.categoria === 'Celular') iconoCat = 'fa-mobile-alt';
+                if(['Internet','Cable'].includes(g.categoria)) iconoCat = 'fa-wifi';
+                if(['Compras del supermercado','Limpieza'].includes(g.categoria)) iconoCat = 'fa-shopping-basket';
+                if(['Reparaciones','Herramientas'].includes(g.categoria)) iconoCat = 'fa-tools';
+                if(g.categoria === 'Pintura') iconoCat = 'fa-paint-brush';
+                if(g.categoria === 'Jardín') iconoCat = 'fa-seedling';
+                if(g.categoria === 'Netflix') iconoCat = 'fa-tv';
+                if(g.categoria === 'Monotributo') iconoCat = 'fa-file-invoice-dollar';
+                if(g.categoria === 'Mantenimiento de tarjeta') iconoCat = 'fa-credit-card';
+                if(g.categoria === 'Peluquería') iconoCat = 'fa-scissors';
+
+                let claseColorDinamico = 'bg-total'; 
+                if (catsServicios.includes(g.categoria)) {
+                    claseColorDinamico = 'bg-servicios'; 
+                } else if (catsSuper.includes(g.categoria)) {
+                    claseColorDinamico = 'bg-super'; 
+                }
+
+                return `
+                    <div class="historial-item">
+                        <div class="historial-item-left">
+                            <div class="hogar-icon-wrapper ${claseColorDinamico}"><i class="fas ${iconoCat}"></i></div>
+                            <div class="hogar-detalles-texto">
+                                <span class="historial-item-cat">${g.categoria}</span>
+                                <span class="hogar-obs text-muted">${textoDetalle}</span>
+                                <div style="display: flex; gap: 15px; margin-top: 2px;">
+                                    <span class="historial-item-date"><i class="far fa-calendar-alt"></i> ${fechaVisual}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="historial-item-right-actions">
+                            <strong>$${g.monto.toLocaleString('es-AR', { minimumFractionDigits: 2 })}</strong>
+                            <button onclick="eliminarGastoHogar(${g.id})" class="btn-delete-gasto" title="Eliminar Registro">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function eliminarGastoHogar(idGasto) {
+            if (confirm("¿Estás seguro de que deseas eliminar este gasto del hogar?")) {
+                gastosHogarGlobal = gastosHogarGlobal.filter(g => g.id !== idGasto);
+                localStorage.setItem('gastos_hogar_datos', JSON.stringify(gastosHogarGlobal));
+                renderizarHistorialHogar();
+                calcularEstadisticas();
+            }
+        }
+    </script>
+</body>
+</html>

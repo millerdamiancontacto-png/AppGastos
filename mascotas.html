@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Mascotas</title>
+    <link rel="icon" type="image/png" href="logo2.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="mascotas.css">
+    <style>
+        /* Estilos específicos para los contenedores de comida visual */
+        .food-widgets-container {
+            display: flex;
+            gap: 15px;
+            justify-content: space-between;
+            margin-top: 15px;
+            width: 100%;
+        }
+        .food-container-widget {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 12px;
+            border: 1px dashed #e5e7eb;
+        }
+        .jar {
+            position: relative;
+            width: 70px;
+            height: 100px;
+            border: 4px solid #4b5563;
+            border-radius: 8px 8px 20px 20px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        }
+        .jar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 12px;
+            width: 38px;
+            height: 8px;
+            background: #4b5563;
+            border-radius: 4px 4px 0 0;
+            margin-top: -10px;
+        }
+        .jar-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0%; /* Se maneja con JS */
+            transition: height 0.8s ease-in-out;
+        }
+        /* Colores temáticos para diferenciar los alimentos */
+        .fill-dog { background: linear-gradient(to top, #d97706, #fbbf24); }
+        .fill-cat { background: linear-gradient(to top, #2563eb, #60a5fa); }
+        
+        .jar-content {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            top: 40%;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #1f2937;
+            z-index: 2;
+            text-shadow: 0px 0px 4px rgba(255,255,255,0.8);
+        }
+        /* Clase auxiliar para ocultar elementos dinámicos */
+        .hidden-dynamic {
+            display: none !important;
+        }
+        /* Estilo para el botón de eliminar gasto */
+        .btn-delete-gasto {
+            background: none;
+            border: none;
+            color: #9CA3AF;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background 0.2s, color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-delete-gasto:hover {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        .historial-item-right-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+           <div class="icon-circle purple-light" style="cursor:pointer; margin-bottom: 1.5rem;" onclick="window.location.href='index.html'" title="Volver al inicio">
+               <i class="fas fa-arrow-left"></i>
+             </div>
+        <main>
+            <!-- CONTENEDOR DE FICHAS DE MASCOTAS -->
+            <div class="section-header">
+                <h2><i class="fas fa-paw"></i> Mis Mascotas</h2>
+                <button id="btn-nueva-mascota" class="btn-secondary-sm"><i class="fas fa-plus"></i> Agregar Mascota</button>
+            </div>
+
+            <!-- Formulario Oculto para Añadir/Editar Mascota -->
+            <div id="modal-mascota" class="card perfil-edit-form hidden" style="margin-bottom: 20px;">
+                <h3>Ficha de la Mascota</h3>
+                <form id="form-perfil-mascota">
+                    <div class="perfil-form-grid">
+                        <div class="form-group">
+                            <label>Nombre</label>
+                            <input type="text" id="pet-nombre" required placeholder="Ej: Loki">
+                        </div>
+                        <div class="form-group">
+                            <label>Especie</label>
+                            <select id="pet-especie" required>
+                                <option value="Perro">Perro</option>
+                                <option value="Gato">Gato</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha de Nacimiento</label>
+                            <input type="date" id="pet-nacimiento" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Peso (kg)</label>
+                            <input type="number" step="0.1" id="pet-peso" placeholder="Ej: 8.5">
+                        </div>
+                        <div class="form-group">
+                            <label>Foto de la Mascota</label>
+                            <input type="file" id="pet-foto" accept="image/*" style="padding: 8px;">
+                        </div>
+                    </div>
+                    
+                    <div class="perfil-form-grid" style="margin-top: 10px;">
+                        <div class="form-group">
+                            <label>Vacunas Aplicadas</label>
+                            <input type="text" id="pet-vacunas" placeholder="Ej: Antirrábica, Quíntuple">
+                        </div>
+                        <div class="form-group">
+                            <label>Medicamentos Actuales</label>
+                            <input type="text" id="pet-medicamentos" placeholder="Ej: Gotas ojos">
+                        </div>
+                        <div class="form-group">
+                            <label>Color</label>
+                            <input type="text" id="pet-color" placeholder="Ej: Blanco con manchas negras, Atigrado">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 10px;">
+                        <label>Historial Veterinario / Notas breves</label>
+                        <textarea id="pet-historial" rows="2" placeholder="Ej: Operación de castración en 2024. Control anual ok."></textarea>
+                    </div>
+
+                    <div class="perfil-form-actions" style="margin-top: 15px;">
+                        <button type="submit" class="btn-save-perfil">Guardar Ficha</button>
+                        <button type="button" id="btn-cancelar-mascota" class="btn-cancel-perfil">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Grilla donde se renderizan las fichas médicas -->
+            <div id="contenedor-fichas-mascotas" class="mascotas-fichas-grid">
+                <!-- Se cargan dinámicamente -->
+            </div>
+
+            <!-- NUEVO: RESUMEN DE GASTOS ESTADÍSTICOS POR GRUPOS -->
+            <div class="card stats-card" style="padding: 1.25rem; margin-bottom: 25px;">
+                <div class="stats-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3><i class="fas fa-chart-pie"></i> Resumen de Gastos</h3>
+                    <div class="stats-toggle" style="background: #f3f4f6; padding: 4px; border-radius: 8px; display: flex; gap: 2px;">
+                        <button id="btn-stats-mes" class="btn-toggle active" onclick="cambiarPeriodoStats('mes')">Este Mes</button>
+                        <button id="btn-stats-anio" class="btn-toggle" onclick="cambiarPeriodoStats('anio')">Este Año</button>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-box box-alimentacion">
+                        <span class="stat-label"><i class="fas fa-cookie-bite"></i> Alimentación</span>
+                        <span class="stat-monto" id="stat-alimentacion-monto">$0,00</span>
+                    </div>
+                    <div class="stat-box box-salud">
+                        <span class="stat-label"><i class="fas fa-stethoscope"></i> Salud y Veterinaria</span>
+                        <span class="stat-monto" id="stat-salid-monto">$0,00</span>
+                    </div>
+                    <div class="stat-box box-estilo">
+                        <span class="stat-label"><i class="fas fa-sparkles"></i> Estilo y Confort</span>
+                        <span class="stat-monto" id="stat-estilo-monto">$0,00</span>
+                    </div>
+                    <div class="stat-box box-otros">
+                        <span class="stat-label"><i class="fas fa-ellipsis-h"></i> Otros Gastos</span>
+                        <span class="stat-monto" id="stat-otros-monto">$0,00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="auto-grid" style="margin-top: 20px;">
+                <!-- Formulario de Registro de Gastos -->
+                <div class="card" style="padding: 1.5rem;">
+                    <div class="widget-header"><h3><i class="fas fa-plus-circle"></i> Registrar Gasto</h3></div>
+                    <form id="form-gasto-mascota" class="simple-form">
+                        <div class="form-group">
+                            <label>Fecha</label>
+                            <input type="date" id="gasto-fecha" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Mascota</label>
+                            <select id="gasto-mascota-select" required>
+                                <option value="" disabled selected>Selecciona la mascota...</option>
+                                <option value="Todas">Todas / General</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Categoría</label>
+                            <select id="gasto-categoria" required>
+                                <option value="" disabled selected>Selecciona una categoría...</option>
+                                <optgroup label="Alimentación">
+                                    <option value="Alimento">Alimento</option>
+                                    <option value="Arena sanitaria">Arena sanitaria</option>
+                                </optgroup>
+                                <optgroup label="Salud y Veterinaria">
+                                    <option value="Veterinario">Veterinario</option>
+                                    <option value="Vacunas">Vacunas</option>
+                                    <option value="Antiparasitarios">Antiparasitarios</option>
+                                    <option value="Medicamentos">Medicamentos</option>
+                                    <option value="Emergencias">Emergencias</option>
+                                </optgroup>
+                                <optgroup label="Estilo y Confort">
+                                    <option value="Juguetes">Juguetes</option>
+                                    <option value="Accesorios">Accesorios</option>
+                                    <option value="Peluquería">Peluquería</option>
+                                </optgroup>
+                                <optgroup label="Otros">
+                                    <option value="Adopciones">Adopciones</option>
+                                    <option value="Otros">Otros</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        
+                        <!-- OPCIONES DESPLEGABLES DINÁMICAS SÓLO PARA ALIMENTO -->
+                        <div class="form-group hidden-dynamic" id="grupo-tipo-alimento">
+                            <label style="color: #4f46e5; font-weight: 600;">Tipo de Alimento</label>
+                            <select id="gasto-alimento-tipo">
+                                <option value="Perro" selected>Alimento para Perro</option>
+                                <option value="Gato">Alimento para Gato</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group hidden-dynamic" id="grupo-cantidad-alimento">
+                            <label style="color: #d97706; font-weight: 600;">Cantidad Comprada (en kg)</label>
+                            <input type="number" step="0.01" id="gasto-alimento-kg" placeholder="Ej: 7.5 o 3">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Monto ($)</label>
+                            <input type="number" id="gasto-monto" placeholder="Ej: 4500" required>
+                        </div>
+                        <button type="submit" class="btn-primary">Guardar Gasto</button>
+                    </form>
+                </div>
+
+                <!-- Resumen Breve o Alertas de Salud -->
+                <div class="card" style="padding: 1.5rem;">
+                    <div class="widget-header"><h3><i class="fas fa-heartbeat"></i> Recordatorios e info</h3></div>
+                    <div class="alert-item alert-green">
+                        <i class="fas fa-shield-dog"></i>
+                        <span><strong>Tip:</strong> Recordá aplicar los antiparasitarios internos cada 3 meses y externos mensualmente.</span>
+                    </div>
+                    <div class="alert-item alert-yellow">
+                        <i class="fas fa-syringe"></i>
+                        <span>Revisá las fechas de las vacunas anuales en el cuadro de cada mascota.</span>
+                    </div>
+
+                    <!-- CONTENEDORES DE COMIDA VISUAL (DOBLE TACHO) -->
+                    <div class="food-widgets-container" style="align-items: center;">
+                        <div class="food-container-widget">
+                            <span style="font-size: 0.8rem; font-weight: 600; margin-bottom: 8px; color: #b45309;"><i class="fas fa-dog"></i> Stock Perro</span>
+                            <div class="jar">
+                                <div class="jar-content" id="jar-dog-label">0 kg</div>
+                                <div class="jar-fill fill-dog" id="jar-dog-fill-bar"></div>
+                            </div>
+                            <span style="font-size: 0.7rem; color: #6b7280; margin-top: 4px;">Porción: 180g</span>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px;">
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <button id="btn-alimentar-perro" type="button" class="btn-secondary-sm" style="padding: 12px; border-radius: 50%; width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; background-color: #FEF3C7; color: #D97706;" title="Alimentar Perro">
+                                    <i class="fas fa-dog"></i>
+                                </button>
+                                <span style="font-size: 0.65rem; font-weight: bold; color: #D97706; margin-top: 3px;">Alimentar Perro</span>
+                            </div>
+
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <button id="btn-alimentar-gato" type="button" class="btn-secondary-sm" style="padding: 12px; border-radius: 50%; width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; background-color: #EFF6FF; color: #1D4ED8;" title="Alimentar Gatos">
+                                    <i class="fas fa-cat"></i>
+                                </button>
+                                <span style="font-size: 0.65rem; font-weight: bold; color: #1D4ED8; margin-top: 3px;">Alimentar Gatos</span>
+                            </div>
+                        </div>
+
+                        <div class="food-container-widget">
+                            <span style="font-size: 0.8rem; font-weight: 600; margin-bottom: 8px; color: #1d4ed8;"><i class="fas fa-cat"></i> Stock Gato</span>
+                            <div class="jar">
+                                <div class="jar-content" id="jar-cat-label">0 kg</div>
+                                <div class="jar-fill fill-cat" id="jar-cat-fill-bar"></div>
+                            </div>
+                            <span style="font-size: 0.7rem; color: #6b7280; margin-top: 4px;">Porción: 300g</span>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.7rem; color: #6b7280; text-align: center; margin-top: 8px;">Capacidad máxima por contenedor: 7.5 kg</p>
+                </div>
+            </div>
+
+            <!-- Historial de Registros de Mascotas -->
+            <div class="card historial-card">
+                <div class="widget-header">
+                    <h3><i class="fas fa-history"></i> Historial de Gastos de Mascotas</h3>
+                </div>
+                <div class="historial-lista" id="historial-gastos-mascotas">
+                    <p class="text-muted text-center" style="padding: 1rem;">No hay gastos registrados todavía.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+    let mascotas = JSON.parse(localStorage.getItem('perfiles_mascotas')) || [
+        {
+            id: 1,
+            nombre: "Loki",
+            especie: "Perro",
+            nacimiento: "2021-07-15", 
+            peso: "12",
+            foto: null,
+            vacunas: "Antirrábica (2025), Séxtuple",
+            medicamentos: "Ninguno",
+            color: "Marrón y Negro",
+            historial: "Castrado. Al día."
+        }
+    ];
+
+    let listaGastosGlobal = JSON.parse(localStorage.getItem('gastos_mascotas_datos')) || [];
+    let editandoId = null; 
+    let periodoActualStats = 'mes'; // Control de tiempo para los bloques estadísticos
+
+    const historialGastos = document.getElementById('historial-gastos-mascotas');
+
+    // MAPAS DE CONFIGURACIÓN VISUAL (ÍCONOS Y COLORES POR GRUPO)
+    const iconosCategorias = {
+        'Alimento': 'fas fa-cookie-bite', 'Arena sanitaria': 'fas fa-box',
+        'Veterinario': 'fas fa-stethoscope', 'Vacunas': 'fas fa-syringe', 'Antiparasitarios': 'fas fa-shield-dog', 'Medicamentos': 'fas fa-pills', 'Emergencias': 'fas fa-ambulance',
+        'Juguetes': 'fas fa-bone', 'Accesorios': 'fas fa-rebel', 'Peluquería': 'fas fa-cut',
+        'Adopciones': 'fas fa-heart', 'Otros': 'fas fa-ellipsis-h'
+    };
+
+    const coloresCategorias = {
+        'Alimento': 'cat-green', 'Arena sanitaria': 'cat-green',
+        'Veterinario': 'cat-purple', 'Vacunas': 'cat-purple', 'Antiparasitarios': 'cat-purple', 'Medicamentos': 'cat-purple', 'Emergencias': 'cat-purple',
+        'Juguetes': 'cat-blue', 'Accesorios': 'cat-blue', 'Peluquería': 'cat-blue',
+        'Adopciones': 'cat-gray', 'Otros': 'cat-gray'
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        renderizarFichas();
+        actualizarSelectMascotas();
+        actualizarRecordatoriosCumpleanos();
+        renderizarHistorialExistente();
+        actualizarContenedorComida();
+        verificarStockAlimentoAlerta();
+        
+        document.getElementById('gasto-fecha').value = new Date().toISOString().split('T')[0];
+    });
+
+    const btnNuevaMascota = document.getElementById('btn-nueva-mascota');
+    const btnCancelarMascota = document.getElementById('btn-cancelar-mascota');
+    const modalMascota = document.getElementById('modal-mascota');
+    const formMascota = document.getElementById('form-perfil-mascota');
+
+    btnNuevaMascota.addEventListener('click', () => {
+        editandoId = null; 
+        formMascota.reset();
+        document.getElementById('pet-foto').value = '';
+        modalMascota.querySelector('h3').textContent = "Nueva Ficha de Mascota";
+        modalMascota.classList.remove('hidden');
+    });
+
+    btnCancelarMascota.addEventListener('click', () => {
+        modalMascota.classList.add('hidden');
+        editandoId = null;
+    });
+
+    formMascota.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const fotoInput = document.getElementById('pet-foto');
+        const archivo = fotoInput.files[0];
+
+        const guardarDatos = (fotoBase64 = null) => {
+            let fotoFinal = fotoBase64;
+            if (editandoId && !fotoFinal) {
+                const petExistente = mascotas.find(p => p.id === editandoId);
+                if (petExistente) fotoFinal = petExistente.foto;
+            }
+
+            const datosMascota = {
+                id: editandoId ? editandoId : Date.now(),
+                nombre: document.getElementById('pet-nombre').value,
+                especie: document.getElementById('pet-especie').value,
+                nacimiento: document.getElementById('pet-nacimiento').value,
+                peso: document.getElementById('pet-peso').value,
+                foto: fotoFinal,
+                vacunas: document.getElementById('pet-vacunas').value || 'Ninguna',
+                medicamentos: document.getElementById('pet-medicamentos').value || 'Ninguno',
+                color: document.getElementById('pet-color').value || 'No especificado',
+                historial: document.getElementById('pet-historial').value || 'Sin notas'
+            };
+
+            if (editandoId) {
+                mascotas = mascotas.map(pet => pet.id === editandoId ? datosMascota : pet);
+            } else {
+                mascotas.push(datosMascota);
+            }
+
+            localStorage.setItem('perfiles_mascotas', JSON.stringify(mascotas));
+            modalMascota.classList.add('hidden');
+            editandoId = null;
+            
+            renderizarFichas();
+            actualizarSelectMascotas();
+            actualizarRecordatoriosCumpleanos();
+        };
+
+        if (archivo) {
+            const lector = new FileReader();
+            lector.onloadend = () => { guardarDatos(lector.result); };
+            lector.readAsDataURL(archivo);
+        } else {
+            guardarDatos();
+        }
+    });
+
+    function calcularEdad(fechaNac) {
+        if (!fechaNac) return '-';
+        const hoy = new Date();
+        const cumple = new Date(fechaNac);
+        let años = hoy.getFullYear() - cumple.getFullYear();
+        let meses = hoy.getMonth() - cumple.getMonth();
+        if (meses < 0 || (meses === 0 && hoy.getDate() < cumple.getDate())) {
+            años--;
+            meses += 12;
+        }
+        if (hoy.getDate() < cumple.getDate()) {
+            meses--;
+            if (meses < 0) { meses = 11; años--; }
+        }
+        let textoAños = años === 1 ? '1 año' : `${años} años`;
+        let textoMeses = meses === 1 ? '1 mes' : `${meses} meses`;
+        return `${textoAños} y ${textoMeses}`;
+    }
+
+    function actualizarRecordatoriosCumpleanos() {
+        const contenedorAlertas = document.querySelector('.card .alert-yellow').parentElement;
+        const viejosCumples = contenedorAlertas.querySelectorAll('.alert-cumple');
+        viejosCumples.forEach(el => el.remove());
+
+        if (mascotas.length === 0) return;
+        const hoy = new Date();
+
+        mascotas.forEach(pet => {
+            if (!pet.nacimiento) return;
+            const nac = new Date(pet.nacimiento);
+            const proximoCumple = new Date(hoy.getFullYear(), nac.getMonth(), nac.getDate());
+            if (hoy > proximoCumple) proximoCumple.setFullYear(hoy.getFullYear() + 1);
+
+            const diferenciaTiempo = proximoCumple.getTime() - hoy.getTime();
+            const diasRestantes = Math.ceil(diferenciaTiempo / (1000 * 60 * 60 * 24));
+
+            if (diasRestantes <= 30) {
+                const alertaCumple = document.createElement('div');
+                alertaCumple.className = 'alert-item alert-yellow alert-cumple';
+                alertaCumple.style.borderLeft = '5px solid #F59E0B';
+                alertaCumple.innerHTML = `
+                    <i class="fas fa-cake-candles" style="color: #D97706;"></i>
+                    <span>¡Se acerca el cumple de <strong>${pet.nombre}</strong>! Cumple años el ${nac.getDate()}/${nac.getMonth()+1} (Faltan ${diasRestantes} días).</span>
+                `;
+                contenedorAlertas.insertBefore(alertaCumple, contenedorAlertas.firstChild);
+            }
+        });
+    }
+
+    function renderizarFichas() {
+        const contenedor = document.getElementById('contenedor-fichas-mascotas');
+        if(mascotas.length === 0) {
+            contenedor.innerHTML = `<p class="text-muted">No tenés mascotas registradas. Agrega una para empezar.</p>`;
+            return;
+        }
+
+        contenedor.innerHTML = mascotas.map(pet => {
+            const icon = pet.especie === 'Gato' ? 'fa-cat' : 'fa-dog';
+            const avatarHTML = pet.foto 
+                ? `<img src="${pet.foto}" alt="${pet.nombre}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`
+                : `<i class="fas ${icon} fa-2x" style="color: var(--purple-main)"></i>`;
+
+            // --- SELECCIÓN DE IMAGEN DE PELAJE LOCAL ---
+            const colorTexto = (pet.color || '').toLowerCase();
+            let fondoImagen = '';
+            let textStyles = 'color: #111827;'; // Por defecto texto oscuro
+            let iconColor = 'color: #4B5563;';
+            let badgeStyles = 'background-color: #E5E7EB; color: #1F2937;';
+            let historialStyles = 'background-color: rgba(0, 0, 0, 0.05); border-left: 3px solid var(--purple-main); color: #111827;';
+
+            if (colorTexto.includes('negro') || colorTexto.includes('oscuro')) {
+                fondoImagen = "url('negro.png')";
+                textStyles = 'color: #ffffff;'; // Texto blanco para que resalte
+                iconColor = 'color: #9CA3AF;';
+                badgeStyles = 'background-color: #374151; color: #f9fafb;';
+                historialStyles = 'background-color: rgba(255, 255, 255, 0.12); border-left: 3px solid #ffb703; color: #ffffff;';
+            } else if (colorTexto.includes('blanco') || colorTexto.includes('claro') || colorTexto.includes('crema')) {
+                fondoImagen = "url('blanco.png')";
+                textStyles = 'color: #111827;';
+                iconColor = 'color: #6B7280;';
+                badgeStyles = 'background-color: #E5E7EB; color: #111827;';
+                historialStyles = 'background-color: rgba(0, 0, 0, 0.06); border-left: 3px solid var(--purple-main); color: #111827;';
+            } else if (colorTexto.includes('tricolor') || colorTexto.includes('manchas') || colorTexto.includes('atigrado') || colorTexto.includes('marron') || colorTexto.includes('marrón')) {
+                fondoImagen = "url('tricolor.png')";
+                textStyles = 'color: #ffffff;'; // Generalmente los fondos tricolores/marrones oscuros van mejor con blanco
+                iconColor = 'color: #E5E7EB;';
+                badgeStyles = 'background-color: rgba(0,0,0,0.3); color: #ffffff;';
+                historialStyles = 'background-color: rgba(255, 255, 255, 0.15); border-left: 3px solid #f59e0b; color: #ffffff;';
+            } else {
+                // Caso por si escriben otro color, usamos el blanco de respaldo para que no quede vacío
+                fondoImagen = "url('blanco.png')";
+            }
+
+            // Estilos CSS de la tarjeta usando la imagen de fondo con bordes redondeados pulidos
+            let cardFurStyle = `
+                background-image: ${fondoImagen};
+                background-size: cover;
+                background-position: center;
+                border-radius: 28px;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+                border: none;
+                transition: transform 0.3s ease;
+            `;
+
+            return `
+                <div class="card pet-card" style="${cardFurStyle} ${textStyles}">
+                    <div class="pet-card-top">
+                        <div class="pet-avatar-container" style="overflow: hidden; display: flex; align-items: center; justify-content: center; border: 2px solid rgba(255,255,255,0.2);">
+                            ${avatarHTML}
+                        </div>
+                        <div class="pet-info-header">
+                            <h4 style="${textStyles} margin: 0; font-weight: 700;">${pet.nombre} <span class="badge-species" style="${badgeStyles}">${pet.especie}</span></h4>
+                            <p style="opacity: 0.8; margin: 2px 0 0 0; ${textStyles} font-size: 0.85rem;"><i class="fas fa-birthday-cake" style="${iconColor}"></i> ${calcularEdad(pet.nacimiento)}</p>
+                        </div>
+                        <div class="pet-card-actions">
+                            <button onclick="editarMascota(${pet.id})" class="edit-pet-btn" title="Editar Ficha" style="${textStyles} opacity: 0.8;"><i class="fas fa-edit"></i></button>
+                            <button onclick="eliminarMascota(${pet.id})" class="delete-pet-btn" title="Eliminar Ficha" style="${textStyles} opacity: 0.8;"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                    <hr class="divider" style="background: rgba(255,255,255,0.15); margin: 12px 0; border: 0; height: 1px;">
+                    <div class="pet-card-details">
+                        <p style="${textStyles} margin: 4px 0;"><strong style="font-weight: 600;"><i class="fas fa-weight" style="${iconColor}"></i> Peso:</strong> ${pet.peso || '-'} kg</p>
+                        <p style="${textStyles} margin: 4px 0;"><strong style="font-weight: 600;"><i class="fas fa-syringe" style="${iconColor}"></i> Vacunas:</strong> ${pet.vacunas}</p>
+                        <p style="${textStyles} margin: 4px 0;"><strong style="font-weight: 600;"><i class="fas fa-pills" style="${iconColor}"></i> Medicación:</strong> ${pet.medicamentos}</p>
+                        <p style="${textStyles} margin: 4px 0;"><strong style="font-weight: 600;"><i class="fas fa-palette" style="${iconColor}"></i> Color:</strong> <span>${pet.color || 'No especificado'}</span></p>
+                        <p class="pet-historial-text" style="${historialStyles} margin-top: 8px; padding: 10px; border-radius: 12px;"><strong><i class="fas fa-notes-medical"></i> Historial Vet:</strong> ${pet.historial}</p>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    function editarMascota(id) {
+        const pet = mascotas.find(p => p.id === id);
+        if (!pet) return;
+        editandoId = id;
+        document.getElementById('pet-nombre').value = pet.nombre;
+        document.getElementById('pet-especie').value = pet.especie;
+        document.getElementById('pet-nacimiento').value = pet.nacimiento;
+        document.getElementById('pet-peso').value = pet.peso;
+        document.getElementById('pet-vacunas').value = pet.vacunas === 'Ninguna' ? '' : pet.vacunas;
+        document.getElementById('pet-medicamentos').value = pet.medicamentos === 'Ninguno' ? '' : pet.medicamentos;
+        document.getElementById('pet-color').value = pet.color === 'No especificado' ? '' : (pet.color || '');
+        document.getElementById('pet-historial').value = pet.historial === 'Sin notas' ? '' : pet.historial;
+        document.getElementById('pet-foto').value = '';
+        modalMascota.querySelector('h3').textContent = `Editar Ficha de ${pet.nombre}`;
+        modalMascota.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function eliminarMascota(id) {
+        if(confirm("¿Estás seguro de eliminar esta mascota y toda su ficha clínica?")) {
+            mascotas = mascotas.filter(p => p.id !== id);
+            localStorage.setItem('perfiles_mascotas', JSON.stringify(mascotas));
+            renderizarFichas();
+            actualizarSelectMascotas();
+            actualizarRecordatoriosCumpleanos();
+        }
+    }
+
+    function actualizarSelectMascotas() {
+        const select = document.getElementById('gasto-mascota-select');
+        select.innerHTML = '<option value="" disabled selected>Selecciona la mascota...</option><option value="Todas">Todas / General</option>';
+        mascotas.forEach(pet => {
+            const opt = document.createElement('option');
+            opt.value = pet.nombre;
+            opt.textContent = pet.nombre;
+            select.appendChild(opt);
+        });
+    }
+
+    // --- LÓGICA CALCULADORA ESTADÍSTICA (MES / AÑO) ---
+    function cambiarPeriodoStats(periodo) {
+        periodoActualStats = periodo;
+        document.getElementById('btn-stats-mes').classList.toggle('active', periodo === 'mes');
+        document.getElementById('btn-stats-anio').classList.toggle('active', periodo === 'anio');
+        calcularEstadisticasMascotas();
+    }
+
+    function calcularEstadisticasMascotas() {
+        const hoy = new Date();
+        const mesActual = hoy.getMonth();
+        const anioActual = hoy.getFullYear();
+
+        const gastosFiltrados = listaGastosGlobal.filter(g => {
+            // Conversión de formato "DD/MM/YYYY" a objeto Date de forma segura
+            const partes = g.fecha.split('/');
+            const fechaGasto = new Date(partes[2], partes[1] - 1, partes[0]);
+            
+            if (periodoActualStats === 'mes') {
+                return fechaGasto.getMonth() === mesActual && fechaGasto.getFullYear() === anioActual;
+            } else {
+                return fechaGasto.getFullYear() === anioActual;
+            }
+        });
+
+        let alimentacion = 0;
+        let salud = 0;
+        let estilo = 0;
+        let otros = 0;
+
+        gastosFiltrados.forEach(g => {
+            const grupoColor = coloresCategorias[g.categoria] || 'cat-gray';
+            if (grupoColor === 'cat-green') alimentacion += g.monto;
+            else if (grupoColor === 'cat-purple') salud += g.monto;
+            else if (grupoColor === 'cat-blue') estilo += g.monto;
+            else otros += g.monto;
+        });
+
+        const formato = { minimumFractionDigits: 2 };
+        document.getElementById('stat-alimentacion-monto').textContent = `$${alimentacion.toLocaleString('es-AR', formato)}`;
+        document.getElementById('stat-salid-monto').textContent = `$${salud.toLocaleString('es-AR', formato)}`;
+        document.getElementById('stat-estilo-monto').textContent = `$${estilo.toLocaleString('es-AR', formato)}`;
+        document.getElementById('stat-otros-monto').textContent = `$${otros.toLocaleString('es-AR', formato)}`;
+    }
+
+
+    // --- LOGICA DE GASTOS Y CONTENEDORES INDEPENDIENTES ---
+    const selectCategoria = document.getElementById('gasto-categoria');
+    const grupoTipoAlimento = document.getElementById('grupo-tipo-alimento');
+    const grupoCantidadAlimento = document.getElementById('grupo-cantidad-alimento');
+    const selectAlimentoTipo = document.getElementById('gasto-alimento-tipo');
+    const inputAlimentoKg = document.getElementById('gasto-alimento-kg');
+
+    selectCategoria.addEventListener('change', () => {
+        if (selectCategoria.value === 'Alimento') {
+            grupoCantidadAlimento.classList.remove('hidden-dynamic');
+            grupoTipoAlimento.classList.remove('hidden-dynamic');
+            inputAlimentoKg.setAttribute('required', 'true');
+        } else {
+            grupoCantidadAlimento.classList.add('hidden-dynamic');
+            grupoTipoAlimento.classList.add('hidden-dynamic');
+            inputAlimentoKg.removeAttribute('required');
+            inputAlimentoKg.value = ''; 
+        }
+    });
+    
+    function actualizarContenedorComida() {
+        const MAX_KILOS = 7.5; 
+        
+        // Suma tanto las compras (positivos) como las alimentaciones (negativos)
+        let kgPerro = listaGastosGlobal
+            .filter(g => g.categoria === 'Alimento' && g.tipoAlimento === 'Perro' && g.kilosAlimento !== undefined && g.kilosAlimento !== null)
+            .reduce((acc, current) => acc + parseFloat(current.kilosAlimento), 0);
+
+        let kgGato = listaGastosGlobal
+            .filter(g => g.categoria === 'Alimento' && g.tipoAlimento === 'Gato' && g.kilosAlimento !== undefined && g.kilosAlimento !== null)
+            .reduce((acc, current) => acc + parseFloat(current.kilosAlimento), 0);
+
+        // Validaciones para que las barras no se rompan visualmente si baja de 0 o supera el máximo
+        if (kgPerro < 0) kgPerro = 0; if (kgPerro > MAX_KILOS) kgPerro = MAX_KILOS;
+        if (kgGato < 0) kgGato = 0; if (kgGato > MAX_KILOS) kgGato = MAX_KILOS;
+
+        const pctPerro = (kgPerro / MAX_KILOS) * 100;
+        const pctGato = (kgGato / MAX_KILOS) * 100;
+
+        document.getElementById('jar-dog-fill-bar').style.height = `${pctPerro}%`;
+        document.getElementById('jar-dog-label').textContent = `${kgPerro.toFixed(2)} kg`;
+
+        document.getElementById('jar-cat-fill-bar').style.height = `${pctGato}%`;
+        document.getElementById('jar-cat-label').textContent = `${kgGato.toFixed(2)} kg`;
+    }
+
+    function renderizarHistorialExistente() {
+        if (listaGastosGlobal.length === 0) {
+            historialGastos.innerHTML = `<p class="text-muted text-center" style="padding: 1rem;">No hay gastos registrados todavía.</p>`;
+            calcularEstadisticasMascotas();
+            return;
+        }
+        historialGastos.innerHTML = listaGastosGlobal.map(g => {
+            const infoAlimento = g.kilosAlimento ? ` (${g.tipoAlimento}: ${g.kilosAlimento} kg)` : '';
+            const claseColor = coloresCategorias[g.categoria] || 'cat-gray';
+            const claseIcono = iconosCategorias[g.categoria] || 'fas fa-paw';
+
+            return `
+                <div class="historial-item ${claseColor}">
+                    <div class="historial-item-left">
+                        <div class="historial-icon-wrapper"><i class="${claseIcono}"></i></div>
+                        <div class="historial-item-info">
+                            <span class="historial-item-cat">${g.categoria}${infoAlimento}</span>
+                            <div class="historial-meta-row">
+                                <span class="badge-pet-name"><i class="fas fa-tag"></i> ${g.mascota}</span>
+                                <span class="historial-item-date"><i class="far fa-calendar-alt"></i> ${g.fecha}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="historial-item-right-actions">
+                        <strong class="monto-valor">$${g.monto.toLocaleString('es-AR', { minimumFractionDigits: 2 })}</strong>
+                        <button onclick="eliminarGasto(${g.id})" class="btn-delete-gasto" title="Eliminar Gasto">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        calcularEstadisticasMascotas(); // Refrescar los bloques numéricos superiores
+    }
+
+    function eliminarGasto(idGasto) {
+        if (confirm("¿Estás seguro de que querés borrar este registro de gasto?")) {
+            listaGastosGlobal = listaGastosGlobal.filter(g => g.id !== idGasto);
+            localStorage.setItem('gastos_mascotas_datos', JSON.stringify(listaGastosGlobal));
+            renderizarHistorialExistente();
+            actualizarContenedorComida();
+            verificarStockAlimentoAlerta();
+        }
+    }
+    
+    document.getElementById('form-gasto-mascota').addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        const fechaFormato = document.getElementById('gasto-fecha').value.split('-').reverse().join('/');
+        const mascota = document.getElementById('gasto-mascota-select').value;
+        const category = selectCategoria.value;
+        const monto = parseFloat(document.getElementById('gasto-monto').value);
+        
+        const kilos = inputAlimentoKg.value ? parseFloat(inputAlimentoKg.value) : null;
+        const tipoAlimento = category === 'Alimento' ? selectAlimentoTipo.value : null;
+
+        const nuevoGasto = {
+            id: Date.now(),
+            fecha: fechaFormato,
+            mascota: mascota,
+            categoria: category,
+            monto: monto,
+            kilosAlimento: kilos,
+            tipoAlimento: tipoAlimento
+        };
+
+        listaGastosGlobal.unshift(nuevoGasto);
+        localStorage.setItem('gastos_mascotas_datos', JSON.stringify(listaGastosGlobal));
+
+        renderizarHistorialExistente();
+        actualizarContenedorComida();
+        verificarStockAlimentoAlerta();
+
+        document.getElementById('form-gasto-mascota').reset();
+        grupoCantidadAlimento.classList.add('hidden-dynamic');
+        grupoTipoAlimento.classList.add('hidden-dynamic');
+        inputAlimentoKg.removeAttribute('required');
+        document.getElementById('gasto-fecha').value = new Date().toISOString().split('T')[0];
+    });
+    // --- LÓGICA DE REDUCCIÓN DE STOCK POR MASCOTA INDEPENDIENTE ---
+
+        // Evento para alimentar al Perro
+        document.getElementById('btn-alimentar-perro').addEventListener('click', () => {
+            let kgPerroActual = listaGastosGlobal
+                .filter(g => g.categoria === 'Alimento' && g.tipoAlimento === 'Perro' && g.kilosAlimento)
+                .reduce((acc, current) => acc + parseFloat(current.kilosAlimento), 0);
+
+            const consumoPerro = 0.18; // 180g
+
+            if (kgPerroActual < consumoPerro) {
+                alert("¡No hay suficiente alimento en el contenedor de Perro!");
+                return;
+            }
+
+            if (confirm(`¿Querés alimentar al perro? Se descontarán 180g de stock.`)) {
+                const fechaHoy = new Date().toISOString().split('T')[0].split('-').reverse().join('/');
+                
+                listaGastosGlobal.unshift({
+                    id: Date.now(),
+                    fecha: fechaHoy,
+                    mascota: "Todas",
+                    categoria: "Alimento",
+                    monto: 0,
+                    kilosAlimento: -consumoPerro, 
+                    tipoAlimento: "Perro"
+                });
+
+                localStorage.setItem('gastos_mascotas_datos', JSON.stringify(listaGastosGlobal));
+                renderizarHistorialExistente();
+                actualizarContenedorComida();
+                verificarStockAlimentoAlerta();
+            }
+        });
+
+        // Evento para alimentar a los Gatos
+        document.getElementById('btn-alimentar-gato').addEventListener('click', () => {
+            let kgGatoActual = listaGastosGlobal
+                .filter(g => g.categoria === 'Alimento' && g.tipoAlimento === 'Gato' && g.kilosAlimento)
+                .reduce((acc, current) => acc + parseFloat(current.kilosAlimento), 0);
+
+            const consumoGato = 0.30; // 300g
+
+            if (kgGatoActual < consumoGato) {
+                alert("¡No hay suficiente alimento en el contenedor de Gato!");
+                return;
+            }
+
+            if (confirm(`¿Querés alimentar a los gatos? Se descontarán 300g de stock.`)) {
+                const fechaHoy = new Date().toISOString().split('T')[0].split('-').reverse().join('/');
+                
+                listaGastosGlobal.unshift({
+                    id: Date.now(),
+                    fecha: fechaHoy,
+                    mascota: "Todas",
+                    categoria: "Alimento",
+                    monto: 0,
+                    kilosAlimento: -consumoGato, 
+                    tipoAlimento: "Gato"
+                });
+
+                localStorage.setItem('gastos_mascotas_datos', JSON.stringify(listaGastosGlobal));
+                renderizarHistorialExistente();
+                actualizarContenedorComida();
+                verificarStockAlimentoAlerta();
+            }
+        });
+    function verificarStockAlimentoAlerta() {
+        const contenedorAlertas = document.querySelector('.card .alert-yellow').parentElement;
+        
+        // Eliminamos alertas de alimento previas para que no se dupliquen al recargar
+        const alertasAlimentoViejas = contenedorAlertas.querySelectorAll('.alert-alimento-stock');
+        alertasAlimentoViejas.forEach(el => el.remove());
+
+        // Calculamos el stock neto actual (igual que en actualizarContenedorComida)
+        let kgPerro = listaGastosGlobal
+            .filter(g => g.categoria === 'Alimento' && g.tipoAlimento === 'Perro' && g.kilosAlimento !== undefined && g.kilosAlimento !== null)
+            .reduce((acc, current) => acc + parseFloat(current.kilosAlimento), 0);
+
+        let kgGato = listaGastosGlobal
+            .filter(g => g.categoria === 'Alimento' && g.tipoAlimento === 'Gato' && g.kilosAlimento !== undefined && g.kilosAlimento !== null)
+            .reduce((acc, current) => acc + parseFloat(current.kilosAlimento), 0);
+
+        // Umbrales para 7 días de alimento (Porción diaria * 7 días)
+        const umbralPerro7Dias = 0.18 * 7; // 1.26 kg
+        const umbralGato7Dias = 0.30 * 7;  // 2.10 kg
+
+        // Si el stock de perro es bajo, añadimos la nueva alerta
+        if (kgPerro <= umbralPerro7Dias) {
+            const alertaAlimentoPerro = document.createElement('div');
+            alertaAlimentoPerro.className = 'alert-item alert-yellow alert-alimento-stock';
+            alertaAlimentoPerro.style.backgroundColor = '#FEE2E2'; // Fondo rojizo suave
+            alertaAlimentoPerro.style.color = '#991B1B';           // Texto rojo oscuro
+            alertaAlimentoPerro.style.borderLeft = '5px solid #DC2626'; // Borde rojo intenso
+            alertaAlimentoPerro.innerHTML = `
+                <i class="fas fa-exclamation-triangle" style="color: #DC2626;"></i>
+                <span>¡Alerta de Stock! Queda menos de una semana de alimento para <strong>Perro</strong> (${kgPerro.toFixed(2)} kg restantes).</span>
+            `;
+            contenedorAlertas.insertBefore(alertaAlimentoPerro, contenedorAlertas.firstChild);
+        }
+
+        // Si el stock de gato es bajo, añadimos otra nueva alerta
+        if (kgGato <= umbralGato7Dias) {
+            const alertaAlimentoGato = document.createElement('div');
+            alertaAlimentoGato.className = 'alert-item alert-yellow alert-alimento-stock';
+            alertaAlimentoGato.style.backgroundColor = '#FEE2E2'; 
+            alertaAlimentoGato.style.color = '#991B1B';           
+            alertaAlimentoGato.style.borderLeft = '5px solid #DC2626'; 
+            alertaAlimentoGato.innerHTML = `
+                <i class="fas fa-exclamation-triangle" style="color: #DC2626;"></i>
+                <span>¡Alerta de Stock! Queda menos de una semana de alimento para <strong>Gato</strong> (${kgGato.toFixed(2)} kg restantes).</span>
+            `;
+            contenedorAlertas.insertBefore(alertaAlimentoGato, contenedorAlertas.firstChild);
+        }
+    }
+</script>
+</body>
+</html>

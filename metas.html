@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Ahorros</title>
+    <link rel="icon" type="image/png" href="logo2.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="metas.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <header class="top-nav">
+            <div class="logo">
+                <i class="fas fa-arrow-left btn-back-arrow" style="cursor:pointer;" onclick="window.location.href='index.html'"></i>
+                <span>Mis Ahorros</span>
+            </div>
+        </header>
+
+        <main>
+            <div class="stats-grid-metas">
+                <div class="stat-box-meta box-total-ahorrado">
+                    <span class="stat-label-meta"><i class="fas fa-piggy-bank"></i> Total Ahorrado</span>
+                    <span class="stat-monto-meta" id="total-general-ahorrado">$0,00</span>
+                </div>
+                <div class="stat-box-meta box-metas-activas">
+                    <span class="stat-label-meta"><i class="fas fa-bullseye"></i> Metas Activas</span>
+                    <span class="stat-monto-meta" id="cantidad-metas-activas">0</span>
+                </div>
+            </div>
+
+            <div class="metas-form-grid">
+                
+                <div class="card widget-card">
+                    <div class="widget-header">
+                        <i class="fas fa-plus-circle purple-text"></i> 
+                        <h3>Nueva Meta de Ahorro</h3>
+                    </div>
+                    <form id="form-nueva-meta" class="meta-form">
+                        <div class="form-field">
+                            <label for="meta-nombre">Nombre de la Meta</label>
+                            <input type="text" id="meta-nombre" placeholder="Ej: Cambiar cubiertas, Vacaciones" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="meta-objetivo">Monto Objetivo ($)</label>
+                            <input type="number" id="meta-objetivo" placeholder="Ej: 500000" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="meta-inicial">Monto Inicial (Opcional)</label>
+                            <input type="number" id="meta-inicial" placeholder="Ej: 20000" value="0">
+                        </div>
+                        <div class="form-field">
+                            <label for="meta-fecha">Fecha Límite (Opcional)</label>
+                            <input type="date" id="meta-fecha">
+                        </div>
+                        <button type="submit" class="btn-meta-submit btn-purple">Crear Meta</button>
+                    </form>
+                </div>
+
+                <div class="card widget-card">
+                    <div class="widget-header">
+                        <i class="fas fa-dollar-sign green-text"></i> 
+                        <h3>Sumar Ahorro / Aporte</h3>
+                    </div>
+                    <form id="form-aporte-meta" class="meta-form">
+                        <div class="form-field">
+                            <label for="aporte-meta-select">Seleccionar Meta</label>
+                            <select id="aporte-meta-select" required>
+                                <option value="" disabled selected>Selecciona una meta...</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="aporte-monto">Monto a Depositar ($)</label>
+                            <input type="number" id="aporte-monto" placeholder="Ej: 15000" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="aporte-fecha">Fecha del Aporte</label>
+                            <input type="date" id="aporte-fecha" required>
+                        </div>
+                        <button type="submit" class="btn-meta-submit btn-green">Registrar Aporte</button>
+                    </form>
+                </div>
+
+            </div>
+
+            <div class="section-title">
+                <i class="fas fa-tasks purple-text"></i>
+                <h2>Seguimiento de Objetivos</h2>
+            </div>
+            
+            <div id="contenedor-tarjetas-metas" class="metas-progress-grid">
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        let metas = JSON.parse(localStorage.getItem('metas_ahorro_datos')) || [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('aporte-fecha').value = new Date().toISOString().split('T')[0];
+            
+            renderizarMetas();
+            actualizarSelectMetas();
+        });
+
+        document.getElementById('form-nueva-meta').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nombre = document.getElementById('meta-nombre').value;
+            const objetivo = parseFloat(document.getElementById('meta-objetivo').value);
+            const inicial = parseFloat(document.getElementById('meta-inicial').value) || 0;
+            
+            const fechaInput = document.getElementById('meta-fecha').value;
+            const fecha = fechaInput ? fechaInput.split('-').reverse().join('/') : 'Sin límite';
+
+            const nuevaMeta = {
+                id: Date.now(),
+                nombre: nombre,
+                objetivo: objetivo,
+                actual: inicial,
+                fechaLimite: fecha
+            };
+
+            metas.push(nuevaMeta);
+            guardarEnStorage();
+            document.getElementById('form-nueva-meta').reset();
+        });
+
+        document.getElementById('form-aporte-meta').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const idMeta = parseFloat(document.getElementById('aporte-meta-select').value);
+            const monto = parseFloat(document.getElementById('aporte-monto').value);
+
+            metas = metas.map(m => {
+                if(m.id === idMeta) {
+                    return { ...m, actual: m.actual + monto };
+                }
+                return m;
+            });
+
+            guardarEnStorage();
+            document.getElementById('form-aporte-meta').reset();
+            document.getElementById('aporte-fecha').value = new Date().toISOString().split('T')[0];
+        });
+
+        function guardarEnStorage() {
+            localStorage.setItem('metas_ahorro_datos', JSON.stringify(metas));
+            renderizarMetas();
+            actualizarSelectMetas();
+        }
+
+        function actualizarSelectMetas() {
+            const select = document.getElementById('aporte-meta-select');
+            select.innerHTML = '<option value="" disabled selected>Selecciona una meta...</option>';
+            metas.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m.id;
+                opt.textContent = m.nombre;
+                select.appendChild(opt);
+            });
+        }
+
+        function eliminarMeta(id) {
+            if(confirm("¿Seguro que querés eliminar esta meta de ahorro?")) {
+                metas = metas.filter(m => m.id !== id);
+                guardarEnStorage();
+            }
+        }
+
+        function renderizarMetas() {
+            const contenedor = document.getElementById('contenedor-tarjetas-metas');
+            let totalAhorrado = 0;
+
+            if(metas.length === 0) {
+                contenedor.innerHTML = `<div class="card" style="grid-column: 1/-1; text-align: center; padding: 3rem; color: #9ca3af; font-weight: 500;">No tenés metas configuradas todavía. ¡Armá la primera!</div>`;
+                document.getElementById('total-general-ahorrado').textContent = "$0,00";
+                document.getElementById('cantidad-metas-activas').textContent = "0";
+                return;
+            }
+
+            contenedor.innerHTML = metas.map(m => {
+                totalAhorrado += m.actual;
+                let porcentaje = Math.round((m.actual / m.objetivo) * 100);
+                if (porcentaje > 100) porcentaje = 100;
+
+                const formato = { minimumFractionDigits: 2 };
+                const iconFecha = m.fechaLimite === 'Sin límite' ? '<i class="fas fa-infinity"></i>' : '<i class="far fa-calendar-alt"></i>';
+
+                return `
+                    <div class="card meta-progress-card">
+                        <div class="meta-card-header">
+                            <div>
+                                <h4>${m.nombre}</h4>
+                                <p class="sub-text">${iconFecha} Límite: ${m.fechaLimite}</p>
+                            </div>
+                            <button onclick="eliminarMeta(${m.id})" class="btn-delete-meta" title="Eliminar Meta"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                        
+                        <div class="meta-progress-details">
+                            <div class="meta-valores">
+                                <span class="monto-actual">$${m.actual.toLocaleString('es-AR', formato)}</span>
+                                <span class="monto-objetivo">de $${m.objetivo.toLocaleString('es-AR', formato)}</span>
+                            </div>
+                            <div class="meta-bar-container">
+                                <div class="meta-bar-fill" style="width: ${porcentaje}%;"></div>
+                            </div>
+                            <div class="meta-footer-info">
+                                <span class="porcentaje-text">${porcentaje}% Completado</span>
+                                <span class="sub-text">${porcentaje >= 100 ? '¡Meta alcanzada! 🎉' : `Faltan $${(m.objetivo - m.actual).toLocaleString('es-AR', formato)}`}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('total-general-ahorrado').textContent = `$${totalAhorrado.toLocaleString('es-AR', { minimumFractionDigits: 2 })}`;
+            document.getElementById('cantidad-metas-activas').textContent = metas.length;
+        }
+    </script>
+</body>
+</html>

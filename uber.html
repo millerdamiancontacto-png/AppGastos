@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingresos Uber</title>
+    <link rel="icon" type="image/png" href="logo2.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css"> 
+    <link rel="stylesheet" href="uber.css"> 
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- BOTÓN DE RETORNO SOLO Y CIRCULAR -->
+        <div class="icon-circle purple-light" style="cursor:pointer; margin-bottom: 1.5rem;" onclick="window.location.href='index.html'" title="Volver al inicio">
+            <i class="fas fa-arrow-left"></i>
+        </div>
+
+        <main>
+            <div class="uber-banner-card">
+                <img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=1200&q=80" alt="Uber" class="banner-img">
+                <div class="banner-overlay">
+                    <h2><i class="fas fa-car"></i> Mis Ingresos Uber</h2>
+                    <p>Control diario de arqueo de caja, caja inicial y ganancias netas</p>
+                </div>
+            </div>
+
+            <!-- RESUMEN MENSUAL Y ESTADÍSTICAS -->
+            <div class="card stats-card">
+                <div class="stats-header">
+                    <h3><i class="fas fa-chart-line text-purple"></i> Resumen Uber</h3>
+                    <div class="stats-toggle">
+                        <div class="month-picker-wrapper">
+                            <input type="month" id="uber-mes-input" onchange="cambiarMesFiltro(this.value)">
+                            <button id="btn-uber-mes" class="btn-toggle active" onclick="activarFiltroMes()">Por Mes</button>
+                        </div>
+                        <button id="btn-uber-anio" class="btn-toggle" onclick="cambiarPeriodoStats('anio')">Este Año</button>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-box box-total">
+                        <span class="stat-label" id="label-total-uber">Total Ganancias</span>
+                        <span class="stat-monto" id="stat-uber-total">$0,00</span>
+                    </div>
+                    <div class="stat-box box-dias">
+                        <span class="stat-label"><i class="fas fa-calendar-check"></i> Días Trabajados</span>
+                        <span class="stat-monto" id="stat-uber-dias">0 días</span>
+                    </div>
+                    <div class="stat-box box-promedio">
+                        <span class="stat-label"><i class="fas fa-calculator"></i> Promedio Diario</span>
+                        <span class="stat-monto" id="stat-uber-promedio">$0,00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="uber-main-grid">
+                
+                <!-- FORMULARIO DE REGISTRO DIARIO -->
+                <div class="card form-card-contenedor">
+                    <div class="widget-header">
+                        <h3><i class="fas fa-cash-register text-purple"></i> Arqueo Diario de Uber</h3>
+                    </div>
+
+                    <form id="form-uber-diario" class="simple-form">
+                        <div class="form-group">
+                            <label for="uber-fecha">Fecha del Día</label>
+                            <input type="date" id="uber-fecha" required>
+                        </div>
+
+                        <div class="form-seccion-titulo">
+                            <i class="fas fa-sun text-purple"></i> Inicio del Día (Caja Inicial)
+                        </div>
+                        <div class="grid-2-col">
+                            <div class="form-group">
+                                <label for="uber-efectivo-inicio">Efectivo Inicial ($)</label>
+                                <input type="number" step="0.01" id="uber-efectivo-inicio" placeholder="0.00" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="uber-banco-inicio">Bancario / App Inicial ($)</label>
+                                <input type="number" step="0.01" id="uber-banco-inicio" placeholder="0.00" value="0">
+                            </div>
+                        </div>
+
+                        <div class="form-seccion-titulo">
+                            <i class="fas fa-moon text-purple"></i> Cierre del Día (Caja Final)
+                        </div>
+                        <div class="grid-2-col">
+                            <div class="form-group">
+                                <label for="uber-efectivo-fin">Efectivo Final ($)</label>
+                                <input type="number" step="0.01" id="uber-efectivo-fin" placeholder="0.00" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="uber-banco-fin">Bancario / App Final ($)</label>
+                                <input type="number" step="0.01" id="uber-banco-fin" placeholder="0.00" value="0">
+                            </div>
+                        </div>
+
+                        <!-- PREVISUALIZADOR DE GANANCIA -->
+                        <div class="preview-ganancia-box">
+                            <span>Ganancia Calculada:</span>
+                            <strong id="preview-ganancia-monto">$0,00</strong>
+                        </div>
+
+                        <button type="submit" class="btn-submit-uber">Guardar Día Uber</button>
+                    </form>
+                </div>
+
+                <!-- HISTORIAL -->
+                <div class="card historial-card-contenedor">
+                    <div class="widget-header">
+                        <h3><i class="fas fa-history text-purple"></i> Historial por Días</h3>
+                    </div>
+                    <div class="historial-lista" id="historial-uber-lista"></div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let uberGlobal = JSON.parse(localStorage.getItem('ingresos_uber_datos')) || [];
+        let periodoActualStats = 'mes';
+        
+        const fechaHoy = new Date();
+        let mesSeleccionado = fechaHoy.getMonth(); 
+        let anioSeleccionado = fechaHoy.getFullYear();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('uber-fecha').value = fechaHoy.toISOString().split('T')[0];
+            
+            const formatoMesInput = `${anioSeleccionado}-${String(mesSeleccionado + 1).padStart(2, '0')}`;
+            document.getElementById('uber-mes-input').value = formatoMesInput;
+            
+            actualizarTextoBotonMes();
+            escucharCambiosMonto();
+            renderizarHistorialUber();
+            calcularEstadisticas();
+        });
+
+        function escucharCambiosMonto() {
+            const inputs = ['uber-efectivo-inicio', 'uber-banco-inicio', 'uber-efectivo-fin', 'uber-banco-fin'];
+            inputs.forEach(id => {
+                document.getElementById(id).addEventListener('input', calcularGananciaPreview);
+            });
+        }
+
+        function calcularGananciaPreview() {
+            const efInicio = parseFloat(document.getElementById('uber-efectivo-inicio').value) || 0;
+            const bnInicio = parseFloat(document.getElementById('uber-banco-inicio').value) || 0;
+            const efFin = parseFloat(document.getElementById('uber-efectivo-fin').value) || 0;
+            const bnFin = parseFloat(document.getElementById('uber-banco-fin').value) || 0;
+
+            const totalInicio = efInicio + bnInicio;
+            const totalFin = efFin + bnFin;
+            const ganancia = totalFin - totalInicio;
+
+            const elPreview = document.getElementById('preview-ganancia-monto');
+            elPreview.textContent = `$${ganancia.toLocaleString('es-AR', { minimumFractionDigits: 2 })}`;
+            
+            if (ganancia < 0) {
+                elPreview.style.color = '#ef4444';
+            } else {
+                elPreview.style.color = '#10b981';
+            }
+
+            return ganancia;
+        }
+
+        document.getElementById('form-uber-diario').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const efInicio = parseFloat(document.getElementById('uber-efectivo-inicio').value) || 0;
+            const bnInicio = parseFloat(document.getElementById('uber-banco-inicio').value) || 0;
+            const efFin = parseFloat(document.getElementById('uber-efectivo-fin').value) || 0;
+            const bnFin = parseFloat(document.getElementById('uber-banco-fin').value) || 0;
+            
+            const totalInicio = efInicio + bnInicio;
+            const totalFin = efFin + bnFin;
+            const ganancia = totalFin - totalInicio;
+
+            const nuevoRegistro = {
+                id: Date.now(),
+                fecha: document.getElementById('uber-fecha').value,
+                efectivoInicio: efInicio,
+                bancoInicio: bnInicio,
+                totalInicio: totalInicio,
+                efectivoFin: efFin,
+                bancoFin: bnFin,
+                totalFin: totalFin,
+                ganancia: ganancia
+            };
+
+            uberGlobal.unshift(nuevoRegistro);
+            localStorage.setItem('ingresos_uber_datos', JSON.stringify(uberGlobal));
+
+            document.getElementById('form-uber-diario').reset();
+            document.getElementById('uber-fecha').value = new Date().toISOString().split('T')[0];
+            document.getElementById('uber-efectivo-inicio').value = 0;
+            document.getElementById('uber-banco-inicio').value = 0;
+            document.getElementById('uber-efectivo-fin').value = 0;
+            document.getElementById('uber-banco-fin').value = 0;
+
+            calcularGananciaPreview();
+            renderizarHistorialUber();
+            calcularEstadisticas();
+        });
+
+        function activarFiltroMes() {
+            periodoActualStats = 'mes';
+            document.getElementById('btn-uber-mes').classList.add('active');
+            document.getElementById('btn-uber-anio').classList.remove('active');
+            document.getElementById('uber-mes-input').showPicker(); 
+        }
+
+        function cambiarMesFiltro(valorInput) {
+            if(!valorInput) return;
+            
+            const partes = valorInput.split('-'); 
+            anioSeleccionado = parseInt(partes[0]);
+            mesSeleccionado = parseInt(partes[1]) - 1;
+
+            periodoActualStats = 'mes';
+            document.getElementById('btn-uber-mes').classList.add('active');
+            document.getElementById('btn-uber-anio').classList.remove('active');
+            
+            actualizarTextoBotonMes();
+            calcularEstadisticas();
+        }
+
+        function cambiarPeriodoStats(periodo) {
+            periodoActualStats = periodo;
+            document.getElementById('btn-uber-mes').classList.toggle('active', periodo === 'mes');
+            document.getElementById('btn-uber-anio').classList.toggle('active', periodo === 'anio');
+            calcularEstadisticas();
+        }
+
+        function actualizarTextoBotonMes() {
+            const mesesNombres = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+            document.getElementById('btn-uber-mes').innerHTML = `${mesesNombres[mesSeleccionado]} ${anioSeleccionado} <i class="fas fa-chevron-down" style="font-size:0.75rem; margin-left:2px;"></i>`;
+        }
+
+        function calcularEstadisticas() {
+            const filtrados = uberGlobal.filter(u => {
+                const fechaGasto = new Date(u.fecha + 'T00:00:00');
+                if (periodoActualStats === 'mes') {
+                    return fechaGasto.getMonth() === mesSeleccionado && fechaGasto.getFullYear() === anioSeleccionado;
+                } else {
+                    return fechaGasto.getFullYear() === new Date().getFullYear();
+                }
+            });
+
+            let totalGanancia = 0;
+            filtrados.forEach(u => {
+                totalGanancia += (u.ganancia || 0);
+            });
+
+            const diasCount = filtrados.length;
+            const promedio = diasCount > 0 ? totalGanancia / diasCount : 0;
+
+            const localeOption = { minimumFractionDigits: 2 };
+            document.getElementById('stat-uber-total').textContent = `$${totalGanancia.toLocaleString('es-AR', localeOption)}`;
+            document.getElementById('stat-uber-dias').textContent = `${diasCount} día${diasCount !== 1 ? 's' : ''}`;
+            document.getElementById('stat-uber-promedio').textContent = `$${promedio.toLocaleString('es-AR', localeOption)}`;
+
+            const mesesNombresLargos = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            
+            if (periodoActualStats === 'mes') {
+                document.getElementById('label-total-uber').textContent = `Total Uber (${mesesNombresLargos[mesSeleccionado]})`;
+            } else {
+                document.getElementById('label-total-uber').textContent = `Total Anual Uber (${new Date().getFullYear()})`;
+            }
+        }
+
+        function renderizarHistorialUber() {
+            const listaElement = document.getElementById('historial-uber-lista');
+            
+            if (uberGlobal.length === 0) {
+                listaElement.innerHTML = `<p style="padding: 1.5rem; margin: 0; color: #9ca3af; text-align: center; font-size: 0.9rem;">No hay registros diarios de Uber aún.</p>`;
+                return;
+            }
+
+            listaElement.innerHTML = uberGlobal.map(u => {
+                const fechaVisual = u.fecha.split('-').reverse().join('/');
+                const colorGanancia = u.ganancia >= 0 ? '#10b981' : '#ef4444';
+
+                return `
+                    <div class="historial-item">
+                        <div class="historial-item-top">
+                            <div class="historial-item-left">
+                                <div class="ingresos-icon-wrapper bg-uber"><i class="fas fa-car"></i></div>
+                                <div class="ingresos-detalles-texto">
+                                    <span class="historial-item-cat">Día: ${fechaVisual}</span>
+                                    <span class="historial-item-date"><i class="fas fa-coins"></i> Inicio: $${u.totalInicio.toLocaleString('es-AR')} | Fin: $${u.totalFin.toLocaleString('es-AR')}</span>
+                                </div>
+                            </div>
+                            <div class="historial-item-right-actions">
+                                <strong style="color: ${colorGanancia}; font-size: 1.1rem;">
+                                    ${u.ganancia >= 0 ? '+' : ''}$${u.ganancia.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+                                </strong>
+                                <button onclick="eliminarUber(${u.id})" class="btn-delete-ingreso" title="Eliminar">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="desglose-arqueo">
+                            <div class="desglose-col">
+                                <span><i class="fas fa-sun text-purple"></i> <strong>Inicio:</strong> Efec: $${(u.efectivoInicio || 0).toLocaleString('es-AR')} | Banco: $${(u.bancoInicio || 0).toLocaleString('es-AR')}</span>
+                            </div>
+                            <div class="desglose-col">
+                                <span><i class="fas fa-moon text-purple"></i> <strong>Fin:</strong> Efec: $${(u.efectivoFin || 0).toLocaleString('es-AR')} | Banco: $${(u.bancoFin || 0).toLocaleString('es-AR')}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function eliminarUber(id) {
+            if (confirm("¿Deseas eliminar este registro diario de Uber?")) {
+                uberGlobal = uberGlobal.filter(u => u.id !== id);
+                localStorage.setItem('ingresos_uber_datos', JSON.stringify(uberGlobal));
+                renderizarHistorialUber();
+                calcularEstadisticas();
+            }
+        }
+    </script>
+</body>
+</html>

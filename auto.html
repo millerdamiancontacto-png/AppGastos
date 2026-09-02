@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Clio - Ficha Técnica</title>
+    <link rel="icon" type="image/png" href="logo2.png">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto+Condensed:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css"> 
+    <link rel="stylesheet" href="auto.css">   
+    <style>
+        /* Estilo para el botón de retorno circular tipo la imagen */
+        .top-nav-circle-only {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px 5px 20px;
+        }
+        .btn-circle-back {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            outline: none;
+            text-decoration: none;
+        }
+        .btn-circle-back:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+        .btn-circle-back i {
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- HEADER SOLO CON FLECHA CIRCULAR -->
+        <header class="top-nav-circle-only">
+            <button class="btn-circle-back" onclick="window.location.href='index.html'" title="Volver">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+        </header>
+
+        <main>
+            <div class="tech-dashboard-container">
+                <button id="btn-editar-perfil" class="dashboard-edit-btn">
+                    <i class="fas fa-pen"></i> EDITAR DATOS
+                </button>
+
+                <div class="dash-panel panel-specs">
+                    <div class="spec-row">
+                        <div class="spec-icon"><i class="fas fa-calendar-alt"></i></div>
+                        <div class="spec-text"><span class="lbl">AÑO</span><span class="val" id="txt-anio-auto">2015</span></div>
+                    </div>
+                    <div class="spec-row">
+                        <div class="spec-icon"><i class="fas fa-car"></i></div>
+                        <div class="spec-text"><span class="lbl">VERSIÓN / LÍNEA</span><span class="val" id="txt-version-auto">Authentique</span></div>
+                    </div>
+                    <div class="spec-row">
+                        <div class="spec-icon"><i class="fas fa-door-open"></i></div>
+                        <div class="spec-text"><span class="lbl">CARROCERÍA</span><span class="val">5 Puertas</span></div>
+                    </div>
+                    <div class="spec-row">
+                        <div class="spec-icon"><i class="fas fa-gas-pump"></i></div>
+                        <div class="spec-text"><span class="lbl">MOTOR</span><span class="val">1.2 16V Nafta</span></div>
+                    </div>
+                    <div class="spec-row">
+                        <div class="spec-icon"><i class="fas fa-project-diagram"></i></div>
+                        <div class="spec-text"><span class="lbl">TRANSMISIÓN</span><span class="val">Manual 5 Vel.</span></div>
+                    </div>
+                    <div class="spec-row">
+                        <div class="spec-icon"><i class="fas fa-palette"></i></div>
+                        <div class="spec-text"><span class="lbl">COLOR</span><span class="val">Gris Plata</span></div>
+                    </div>
+                    <div class="spec-row">
+                        <div class="spec-icon"><i class="fas fa-hashtag"></i></div>
+                        <div class="spec-text"><span class="lbl">CHASIS (VIN)</span><span class="val font-mono" id="txt-chasis-auto">8A1BB8H0536123456</span></div>
+                    </div>
+                    <div class="spec-row">
+                        <div class="spec-icon"><i class="fas fa-id-card-alt"></i></div>
+                        <div class="spec-text"><span class="lbl">PATENTE</span><span class="val highlight-blue" id="txt-patente-auto">ABC 123</span></div>
+                    </div>
+                </div>
+
+                <div class="dash-panel panel-center">
+                    <h1 class="main-vehicle-title" id="txt-modelo-auto">RENAULT CLIO</h1>
+                    <div class="sub-title-divider" id="txt-sub-version-auto">FICHA TÉCNICA</div>
+                    
+                    <div class="vehicle-image-wrapper">
+                        <img src="auto.png" alt="Auto" class="vehicle-main-img">
+                    </div>
+
+                    <div class="center-bottom-row">
+                        <div class="odometer-block">
+                            <span class="panel-sub-label">KILÓMETROS REALES</span>
+                            <div class="odometer-display" id="txt-km-auto">
+                                <span>1</span><span>2</span><span>0</span><span>0</span><span>0</span><span>0</span><small>km</small>
+                            </div>
+                        </div>
+                        <div class="vtv-block" id="vtv-status-wrapper">
+                            <span class="panel-sub-label">VTV</span>
+                            <div class="vtv-badge-container">
+                                <div class="vtv-shield-icon green-glow"><i class="fas fa-shield-alt"></i></div>
+                                <div class="vtv-dates">
+                                    <span class="vtv-lbl-status color-green">REALIZADA</span>
+                                    <span class="vtv-lbl-date" id="txt-vtv-auto">No cargado</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dash-panel panel-maintenance">
+                    <div class="maint-box">
+                        <div class="maint-header">CAMBIO DE ACEITE / SERVICE MOTOR</div>
+                        <div class="maint-body" id="alerta-box-aceite"></div>
+                    </div>
+
+                    <div class="maint-box">
+                        <div class="maint-header">ACEITE DE CAJA DE TRANSMISIÓN</div>
+                        <div class="maint-body" id="alerta-box-transmision"></div>
+                    </div>
+
+                    <div class="maint-box">
+                        <div class="maint-header">ESTADO GENERAL DE ALERTAS</div>
+                        <div id="contenedor-alertas-secundarias"></div>
+                    </div>
+
+                    <div class="maint-box box-fuel-spent">
+                        <div class="maint-header">CANTIDAD DE NAFTA GASTADA</div>
+                        <div class="maint-body-fuel">
+                            <div class="fuel-total-wrapper">
+                                <span class="fuel-lbl">TOTAL ACUMULADO EN CARGAS</span>
+                                <div class="fuel-counter" id="stat-combustible-monto">$0,00</div>
+                            </div>
+                            <i class="fas fa-gas-pump fuel-bg-icon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="modal-perfil" class="dashboard-modal hidden">
+                <form id="form-perfil-auto" class="modal-content-form">
+                    <h3>Editar Datos Técnicos</h3>
+                    <div class="form-grid-modal">
+                        <div class="fg">
+                            <label>Nombre / Modelo del Auto</label>
+                            <input type="text" id="edit-modelo" placeholder="Ej: Clio 2" required>
+                        </div>
+                        <div class="fg">
+                            <label>Versión / Línea</label>
+                            <input type="text" id="edit-version" placeholder="Ej: Authentique / Mio / Sport">
+                        </div>
+                        <div class="fg">
+                            <label>Año</label>
+                            <input type="number" id="edit-anio" required>
+                        </div>
+                        <div class="fg">
+                            <label>Patente / Dominio</label>
+                            <input type="text" id="edit-patente" placeholder="Ej: ABC 123">
+                        </div>
+                        <div class="fg">
+                            <label>Número de Chasis (VIN)</label>
+                            <input type="text" id="edit-chasis" placeholder="Ej: 8A1BB...">
+                        </div>
+                        <div class="fg">
+                            <label>KM Inicial</label>
+                            <input type="number" id="edit-km" required>
+                        </div>
+                        <div class="fg">
+                            <label>Vencimiento VTV</label>
+                            <input type="date" id="edit-vtv">
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="submit" class="btn-dashboard-save">Actualizar Ficha</button>
+                        <button type="button" id="btn-cancelar-perfil" class="btn-dashboard-cancel">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- TARJETA STATS -->
+            <div class="card stats-card dark-card" style="padding: 1.25rem; margin-bottom: 25px;">
+                <div class="stats-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3><i class="fas fa-chart-pie"></i> Resumen por Grupos</h3>
+                    <div class="modern-subtle-toggle">
+                        <button id="btn-stats-mes" class="btn-subtle active" onclick="cambiarPeriodoStats('mes')">Este Mes</button>
+                        <button id="btn-stats-anio" class="btn-subtle" onclick="cambiarPeriodoStats('anio')">Este Año</button>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-box box-fijos"><span class="stat-label"><i class="fas fa-shield-alt"></i> Fijos y Obligatorios</span><span class="stat-monto" id="stat-fijos-monto">$0,00</span></div>
+                    <div class="stat-box box-taller"><span class="stat-label"><i class="fas fa-tools"></i> Mantenimiento y Taller</span><span class="stat-monto" id="stat-taller-monto">$0,00</span></div>
+                    <div class="stat-box box-viajes"><span class="stat-label"><i class="fas fa-road"></i> Uso y Viajes</span><span class="stat-monto" id="stat-viajes-monto">$0,00</span></div>
+                    <div class="stat-box box-otros"><span class="stat-label"><i class="fas fa-ellipsis-h"></i> Otros Gastos</span><span class="stat-monto" id="stat-otros-monto">$0,00</span></div>
+                </div>
+            </div>
+
+            <div class="auto-grid">
+                <!-- FORMULARIO REGISTRAR GASTO -->
+                <div class="card dark-card" style="padding: 1.5rem;">
+                    <div class="widget-header"><h3><i class="fas fa-plus-circle"></i> Registrar Gasto</h3></div>
+                    <form id="form-gasto-auto" class="simple-form dark-form">
+                        <div class="form-group"><label>Fecha</label><input type="date" id="gasto-fecha" required></div>
+                        <div class="form-group">
+                            <label>Categoría</label>
+                            <select id="gasto-categoria" required>
+                                <option value="" disabled selected>Selecciona una categoría...</option>
+                                <optgroup label="Cuotas y Compra">
+                                    <option value="Cuota mensual / Pago auto">Cuota mensual / Pago auto</option>
+                                </optgroup>
+                                <optgroup label="Combustible"><option value="Combustible">Combustible</option></optgroup>
+                                <optgroup label="Fijos y Obligatorios"><option value="Seguro">Seguro</option><option value="Patente">Patente</option><option value="VTV">VTV</option></optgroup>
+                                <optgroup label="Mantenimiento y Taller">
+                                    <option value="Cambio de aceite">Cambio de aceite</option>
+                                    <option value="Cambio de aceite transmisión">Cambio de aceite transmisión</option>
+                                    <option value="Filtros">Filtros</option><option value="Correa de distribución">Correa de distribución</option><option value="Frenos">Frenos</option><option value="Neumáticos">Neumáticos</option><option value="Reparaciones">Reparaciones</option><option value="Repuestos">Repuestos</option><option value="Service">Service</option>
+                                </optgroup>
+                                <optgroup label="Uso y Viajes"><option value="Lavados">Lavados</option><option value="Estacionamiento">Estacionamiento</option><option value="Peajes">Peajes</option></optgroup>
+                                <optgroup label="Otros"><option value="Multas">Multas</option><option value="Accesorios">Accesorios</option><option value="Otros">Otros</option></optgroup>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Kilometraje (KM)</label><input type="number" id="gasto-km" placeholder="Ej: 120500">
+                            <small id="gasto-km-ayuda" class="form-help-text"></small>
+                        </div>
+                        <div class="form-group"><label>Monto ($)</label><input type="number" id="gasto-monto" placeholder="Ej: 15000" required></div>
+                        <button type="submit" class="btn-primary btn-primary-purple">Guardar Gasto</button>
+                    </form>
+                </div>
+
+                <!-- HISTORIAL TARJETA -->
+                <div class="card historial-card dark-card">
+                    <div class="widget-header"><h3><i class="fas fa-history"></i> Historial de Gastos</h3></div>
+                    <div class="historial-lista" id="historial-gastos">
+                        <p class="text-muted text-center" style="padding: 1rem;">No hay gastos registrados todavía.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let db;
+        let periodoActualStats = 'mes';
+        let todosLosGastosAuto = [];
+
+        const iconsCategorias = {
+            'Cuota mensual / Pago auto': 'fas fa-handshake-angle', 'Combustible': 'fas fa-gas-pump', 'Seguro': 'fas fa-shield-alt', 'Patente': 'fas fa-file-invoice-dollar', 'VTV': 'fas fa-id-card',
+            'Cambio de aceite': 'fas fa-oil-can', 'Cambio de aceite transmisión': 'fas fa-cogs', 'Filtros': 'fas fa-filter', 'Correa de distribución': 'fas fa-circle-notch',
+            'Frenos': 'fas fa-car-crushed', 'Neumáticos': 'fas fa-circle', 'Reparaciones': 'fas fa-tools', 'Repuestos': 'fas fa-cubes',
+            'Lavados': 'fas fa-tint', 'Estacionamiento': 'fas fa-parking', 'Peajes': 'fas fa-road',
+            'Multas': 'fas fa-exclamation-circle', 'Accesorios': 'fas fa-car-side', 'Service': 'fas fa-wrench', 'Otros': 'fas fa-ellipsis-h'
+        };
+
+        const coloresCategorias = {
+            'Cuota mensual / Pago auto': 'cat-blue', 'Combustible': 'cat-red', 'Seguro': 'cat-blue', 'Patente': 'cat-blue', 'VTV': 'cat-blue',
+            'Cambio de aceite': 'cat-purple', 'Cambio de aceite transmisión': 'cat-purple', 'Filtros': 'cat-purple', 'Correa de distribución': 'cat-purple', 
+            'Frenos': 'cat-purple', 'Neumáticos': 'cat-purple', 'Reparaciones': 'cat-purple', 'Repuestos': 'cat-purple', 'Service': 'cat-purple',
+            'Lavados': 'cat-green', 'Estacionamiento': 'cat-green', 'Peajes': 'cat-green', 'Multas': 'cat-gray', 'Accesorios': 'cat-gray', 'Otros': 'cat-gray'
+        };
+
+        const request = indexedDB.open('FinanzasAppDB', 1);
+        request.onsuccess = function(event) {
+            db = event.target.result;
+            inicializarPerfilAuto();
+            renderizarHistorial();
+        };
+
+        function inicializarPerfilAuto() {
+            if (!localStorage.getItem('auto_modelo')) localStorage.setItem('auto_modelo', 'Renault Clio');
+            if (!localStorage.getItem('auto_version')) localStorage.setItem('auto_version', 'Authentique');
+            if (!localStorage.getItem('auto_anio')) localStorage.setItem('auto_anio', '2015');
+            if (!localStorage.getItem('auto_patente')) localStorage.setItem('auto_patente', 'ABC 123');
+            if (!localStorage.getItem('auto_chasis')) localStorage.setItem('auto_chasis', '8A1BB8H0536123456');
+            if (!localStorage.getItem('auto_km_actual')) localStorage.setItem('auto_km_actual', '120000');
+            if (!localStorage.getItem('auto_vtv_vencimiento')) localStorage.setItem('auto_vtv_vencimiento', '');
+            actualizarVistaPerfil();
+        }
+
+        function actualizarVistaPerfil() {
+            const modelo = localStorage.getItem('auto_modelo');
+            const version = localStorage.getItem('auto_version');
+            const anio = localStorage.getItem('auto_anio');
+            const patente = localStorage.getItem('auto_patente');
+            const chasis = localStorage.getItem('auto_chasis');
+            const kmActual = parseInt(localStorage.getItem('auto_km_actual')) || 0;
+            const vtvVencimiento = localStorage.getItem('auto_vtv_vencimiento');
+
+            document.getElementById('txt-modelo-auto').textContent = modelo.toUpperCase();
+            document.getElementById('txt-sub-version-auto').textContent = version ? version.toUpperCase() : "FICHA TÉCNICA";
+            document.getElementById('txt-version-auto').textContent = version || '-';
+            document.getElementById('txt-anio-auto').textContent = anio;
+            document.getElementById('txt-patente-auto').textContent = patente || '-';
+            document.getElementById('txt-chasis-auto').textContent = chasis || '-';
+            
+            const kmStr = String(kmActual).padStart(6, '0');
+            let odomHTML = '';
+            for(let char of kmStr) { odomHTML += `<span>${char}</span>`; }
+            odomHTML += `<small>km</small>`;
+            document.getElementById('txt-km-auto').innerHTML = odomHTML;
+            
+            const wrapperVtv = document.getElementById('vtv-status-wrapper');
+            if (vtvVencimiento) {
+                const fechaFormateada = vtvVencimiento.split('-').reverse().join('/');
+                wrapperVtv.innerHTML = `
+                    <span class="panel-sub-label">VTV</span>
+                    <div class="vtv-badge-container">
+                        <div class="vtv-shield-icon green-glow"><i class="fas fa-check-circle"></i></div>
+                        <div class="vtv-dates">
+                            <span class="vtv-lbl-status color-green">REALIZADA</span>
+                            <span class="vtv-lbl-date">VENCE: <strong>${fechaFormateada}</strong></span>
+                        </div>
+                    </div>`;
+            } else {
+                wrapperVtv.innerHTML = `
+                    <span class="panel-sub-label">VTV</span>
+                    <div class="vtv-badge-container">
+                        <div class="vtv-shield-icon"><i class="fas fa-times-circle" style="color:#ef4444;"></i></div>
+                        <div class="vtv-dates">
+                            <span class="vtv-lbl-status" style="color:#ef4444;">PENDIENTE</span>
+                            <span class="vtv-lbl-date">No cargado</span>
+                        </div>
+                    </div>`;
+            }
+
+            document.getElementById('gasto-km').placeholder = `Debe ser igual o mayor a ${kmActual}`;
+            document.getElementById('gasto-km-ayuda').innerHTML = `El kilometraje actual es de <strong>${kmActual.toLocaleString()} KM</strong>.`;
+        }
+
+        const btnEditar = document.getElementById('btn-editar-perfil');
+        const btnCancelar = document.getElementById('btn-cancelar-perfil');
+        const modalPerfil = document.getElementById('modal-perfil');
+
+        btnEditar.addEventListener('click', () => {
+            document.getElementById('edit-modelo').value = localStorage.getItem('auto_modelo');
+            document.getElementById('edit-version').value = localStorage.getItem('auto_version');
+            document.getElementById('edit-anio').value = localStorage.getItem('auto_anio');
+            document.getElementById('edit-patente').value = localStorage.getItem('auto_patente');
+            document.getElementById('edit-chasis').value = localStorage.getItem('auto_chasis');
+            document.getElementById('edit-km').value = localStorage.getItem('auto_km_actual');
+            document.getElementById('edit-vtv').value = localStorage.getItem('auto_vtv_vencimiento');
+            modalPerfil.classList.remove('hidden');
+        });
+
+        btnCancelar.addEventListener('click', () => { modalPerfil.classList.add('hidden'); });
+
+        document.getElementById('form-perfil-auto').addEventListener('submit', function(e) {
+            e.preventDefault();
+            localStorage.setItem('auto_modelo', document.getElementById('edit-modelo').value);
+            localStorage.setItem('auto_version', document.getElementById('edit-version').value);
+            localStorage.setItem('auto_anio', document.getElementById('edit-anio').value);
+            localStorage.setItem('auto_patente', document.getElementById('edit-patente').value);
+            localStorage.setItem('auto_chasis', document.getElementById('edit-chasis').value);
+            localStorage.setItem('auto_km_actual', document.getElementById('edit-km').value);
+            localStorage.setItem('auto_vtv_vencimiento', document.getElementById('edit-vtv').value);
+            modalPerfil.classList.add('hidden');
+            actualizarVistaPerfil();
+            cargarAlertasIniciales();
+        });
+
+        function cargarAlertasIniciales() {
+            const contenedorAlertasSec = document.getElementById('contenedor-alertas-secundarias');
+            const alertBoxAceite = document.getElementById('alerta-box-aceite');
+            const alertBoxTransmision = document.getElementById('alerta-box-transmision');
+            
+            const ultimoKmAceite = parseInt(localStorage.getItem('ultimo_cambio_aceite_km'));
+            const ultimoKmTransmision = parseInt(localStorage.getItem('ultimo_cambio_transmision_km'));
+            const kmActual = parseInt(localStorage.getItem('auto_km_actual')) || 0;
+            const vtvVencimiento = localStorage.getItem('auto_vtv_vencimiento');
+            
+            if (!ultimoKmAceite) {
+                alertBoxAceite.innerHTML = `<div class="maint-circle-icon" style="color:#9ca3af;"><i class="fas fa-oil-can"></i></div><div class="maint-info"><span class="status-text" style="color:#9ca3af;">SIN REGISTROS</span><span class="sub-info">PRÓXIMO SERVICE:</span><span class="sub-val">-</span></div>`;
+            } else {
+                const kmRecorridos = kmActual - ultimoKmAceite; const kmRestantes = 10000 - kmRecorridos; const proxCambio = ultimoKmAceite + 10000;
+                if (kmRestantes <= 1000) {
+                    alertBoxAceite.innerHTML = `<div class="maint-circle-icon" style="color:#ef4444; border-color:#ef4444;"><i class="fas fa-oil-can"></i></div><div class="maint-info"><span class="status-text" style="color:#ef4444;">URGENTE</span><span class="sub-info">PRÓXIMO SERVICE:</span><span class="sub-val">${proxCambio.toLocaleString()} km (Faltan ${kmRestantes} km)</span></div>`;
+                } else {
+                    alertBoxAceite.innerHTML = `<div class="maint-circle-icon icon-green"><i class="fas fa-oil-can"></i></div><div class="maint-info"><span class="status-text color-green">OK</span><span class="sub-info">PRÓXIMO SERVICE:</span><span class="sub-val">${proxCambio.toLocaleString()} km (Quedan ${kmRestantes} km)</span></div>`;
+                }
+            }
+
+            if (!ultimoKmTransmision) {
+                alertBoxTransmision.innerHTML = `<div class="maint-circle-icon" style="color:#9ca3af;"><i class="fas fa-cogs"></i></div><div class="maint-info"><span class="status-text" style="color:#9ca3af;">SIN REGISTROS</span><span class="sub-info">PRÓXIMO CAMBIO:</span><span class="sub-val">-</span></div>`;
+            } else {
+                const kmRecorridosTrans = kmActual - ultimoKmTransmision; const kmRestantesTrans = 60000 - kmRecorridosTrans; const proxCambioTrans = ultimoKmTransmision + 60000;
+                if (kmRestantesTrans <= 3000) {
+                    alertBoxTransmision.innerHTML = `<div class="maint-circle-icon" style="color:#ef4444; border-color:#ef4444;"><i class="fas fa-cogs"></i></div><div class="maint-info"><span class="status-text" style="color:#ef4444;">URGENTE</span><span class="sub-info">PRÓXIMO CAMBIO:</span><span class="sub-val">${proxCambioTrans.toLocaleString()} km (Faltan ${kmRestantesTrans} km)</span></div>`;
+                } else {
+                    alertBoxTransmision.innerHTML = `<div class="maint-circle-icon icon-green"><i class="fas fa-cogs"></i></div><div class="maint-info"><span class="status-text color-green">OK</span><span class="sub-info">PRÓXIMO CAMBIO:</span><span class="sub-val">${proxCambioTrans.toLocaleString()} km (Quedan ${kmRestantesTrans} km)</span></div>`;
+                }
+            }
+
+            let HTML_alertas = '';
+            if (vtvVencimiento) {
+                const fechaVto = new Date(vtvVencimiento + 'T00:00:00'); const hoy = new Date(); const diferenciaDias = Math.ceil((fechaVto - hoy) / (1000 * 60 * 60 * 24));
+                if (diferenciaDias < 0) HTML_alertas += `<div class="dashboard-alert-item alert-red-sub"><i class="fas fa-id-card"></i> <span>VTV Vencida (${Math.abs(diferenciaDias)} días)</span></div>`;
+                else if (diferenciaDias <= 30) HTML_alertas += `<div class="dashboard-alert-item alert-yellow-sub"><i class="fas fa-id-card"></i> <span>VTV vence en ${diferenciaDias} días</span></div>`;
+                else HTML_alertas += `<div class="dashboard-alert-item alert-green-sub"><i class="fas fa-id-card"></i> <span>VTV al día</span></div>`;
+            } else {
+                HTML_alertas += `<div class="dashboard-alert-item alert-yellow-sub"><i class="fas fa-exclamation-circle"></i> <span>VTV fecha no configurada</span></div>`;
+            }
+            contenedorAlertasSec.innerHTML = HTML_alertas;
+        }
+
+        function cambiarPeriodoStats(periodo) {
+            periodoActualStats = periodo;
+            document.getElementById('btn-stats-mes').classList.toggle('active', periodo === 'mes');
+            document.getElementById('btn-stats-anio').classList.toggle('active', periodo === 'anio');
+            calcularEstadisticasAuto();
+        }
+
+        function calcularEstadisticasAuto() {
+            const hoy = new Date(); const mesActual = hoy.getMonth(); const anioActual = hoy.getFullYear();
+            const gastosFiltrados = todosLosGastosAuto.filter(g => {
+                const fechaGasto = new Date(g.fecha + 'T00:00:00');
+                return periodoActualStats === 'mes' ? (fechaGasto.getMonth() === mesActual && fechaGasto.getFullYear() === anioActual) : (fechaGasto.getFullYear() === anioActual);
+            });
+
+            let combustible = 0, fijos = 0, taller = 0, viajes = 0, otros = 0;
+            gastosFiltrados.forEach(g => {
+                const tipoColor = coloresCategorias[g.categoria] || 'cat-gray';
+                if (tipoColor === 'cat-red') combustible += g.monto;
+                else if (tipoColor === 'cat-blue') fijos += g.monto;
+                else if (tipoColor === 'cat-purple') taller += g.monto;
+                else if (tipoColor === 'cat-green') viajes += g.monto;
+                else otros += g.monto;
+            });
+
+            const formato = { minimumFractionDigits: 2 };
+            document.getElementById('stat-combustible-monto').textContent = `$${combustible.toLocaleString('es-AR', formato)}`;
+            document.getElementById('stat-fijos-monto').textContent = `$${fijos.toLocaleString('es-AR', formato)}`;
+            document.getElementById('stat-taller-monto').textContent = `$${taller.toLocaleString('es-AR', formato)}`;
+            document.getElementById('stat-viajes-monto').textContent = `$${viajes.toLocaleString('es-AR', formato)}`;
+            document.getElementById('stat-otros-monto').textContent = `$${otros.toLocaleString('es-AR', formato)}`;
+        }
+
+        function renderizarHistorial() {
+            const historialContenedor = document.getElementById('historial-gastos');
+            const transaction = db.transaction(['gastos_clio'], 'readonly');
+            const store = transaction.objectStore('gastos_clio');
+            const requestCursor = store.openCursor(null, 'prev');
+
+            let HTML_acumulado = ''; todosLosGastosAuto = [];
+
+            requestCursor.onsuccess = function(e) {
+                const cursor = e.target.result;
+                if (cursor) {
+                    const gasto = cursor.value; todosLosGastosAuto.push(gasto);
+                    const fechaFormateada = gasto.fecha.split('-').reverse().join('/');
+                    const classIcono = iconsCategorias[gasto.categoria] || 'fas fa-dollar-sign';
+                    const claseColor = coloresCategorias[gasto.categoria] || 'cat-gray';
+                    
+                    HTML_acumulado += `
+                        <div class="historial-item ${claseColor}">
+                            <div class="historial-item-left">
+                                <div class="historial-icon-wrapper"><i class="${classIcono}"></i></div>
+                                <div class="historial-item-info">
+                                    <span class="historial-item-cat">${gasto.categoria}</span>
+                                    <div class="historial-meta-row">
+                                        <span class="historial-item-date"><i class="far fa-calendar-alt"></i> ${fechaFormateada}</span>
+                                        ${gasto.km ? `<span class="historial-item-km"><i class="fas fa-tachometer-alt"></i> ${gasto.km.toLocaleString()} KM</span>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="historial-item-right-actions">
+                                <strong class="monto-valor">$${gasto.monto.toLocaleString('es-AR', { minimumFractionDigits: 2 })}</strong>
+                                <button class="delete-btn" onclick="borrarGasto(${gasto.id})"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>`;
+                    cursor.continue();
+                } else {
+                    historialContenedor.innerHTML = HTML_acumulado || `<p class="text-muted text-center" style="padding: 1rem;">No hay gastos registrados todavía.</p>`;
+                    cargarAlertasIniciales(); calcularEstadisticasAuto();
+                }
+            };
+        }
+
+        function borrarGasto(id) {
+            if (!confirm("¿Estás seguro?")) return;
+            const transaction = db.transaction(['gastos_clio'], 'readwrite');
+            const store = transaction.objectStore('gastos_clio');
+            const requestGet = store.get(id);
+            requestGet.onsuccess = function() {
+                const gastoABorrar = requestGet.result;
+                store.delete(id).onsuccess = function() {
+                    if (gastoABorrar && gastoABorrar.km) recalcularKmMaximo();
+                    else renderizarHistorial();
+                };
+            };
+        }
+
+        function recalcularKmMaximo() {
+            const transaction = db.transaction(['gastos_clio'], 'readonly');
+            db.transaction(['gastos_clio'], 'readonly').objectStore('gastos_clio').openCursor(null, 'prev').onsuccess = function(e) {
+                const cursor = e.target.result;
+                if (cursor && cursor.value.km) localStorage.setItem('auto_km_actual', cursor.value.km);
+                actualizarVistaPerfil(); renderizarHistorial();
+            };
+        }
+
+        document.getElementById('form-gasto-auto').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const fecha = document.getElementById('gasto-fecha').value;
+            const category = document.getElementById('gasto-categoria').value;
+            const km = parseInt(document.getElementById('gasto-km').value) || 0;
+            const monto = parseFloat(document.getElementById('gasto-monto').value);
+            const kmActualBase = parseInt(localStorage.getItem('auto_km_actual')) || 0;
+
+            if (km > 0 && km < kmActualBase) {
+                alert(`¡Error! No puedes ingresar menos de ${kmActualBase.toLocaleString()} KM.`); return;
+            }
+
+            const nuevoGasto = { id: Date.now(), fecha, categoria: category, km, monto, timestamp: new Date().getTime() };
+            db.transaction(['gastos_clio'], 'readwrite').objectStore('gastos_clio').add(nuevoGasto).onsuccess = function() {
+                if (km >= kmActualBase) localStorage.setItem('auto_km_actual', km);
+                if (category === 'Cambio de aceite' || category === 'Service') localStorage.setItem('ultimo_cambio_aceite_km', km > 0 ? km : kmActualBase);
+                if (category === 'Cambio de aceite transmisión') localStorage.setItem('ultimo_cambio_transmision_km', km > 0 ? km : kmActualBase);
+                if (category === 'VTV') {
+                    const fVto = new Date(fecha + 'T00:00:00'); fVto.setFullYear(fVto.getFullYear() + 1);
+                    localStorage.setItem('auto_vtv_vencimiento', `${fVto.getFullYear()}-${String(fVto.getMonth()+1).padStart(2,'0')}-${String(fVto.getDate()).padStart(2,'0')}`);
+                }
+                document.getElementById('form-gasto-auto').reset();
+                actualizarVistaPerfil(); renderizarHistorial();
+            };
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingresos</title>
+    <link rel="icon" type="image/png" href="logo2.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css"> 
+    <link rel="stylesheet" href="ingresos.css"> 
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- BOTÓN DE RETORNO SOLO Y CIRCULAR -->
+        <div class="icon-circle purple-light" style="cursor:pointer; margin-bottom: 1.5rem;" onclick="window.location.href='index.html'" title="Volver al inicio">
+            <i class="fas fa-arrow-left"></i>
+        </div>
+
+        <main>
+            <div class="ingresos-banner-card">
+                <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80" alt="Finanzas" class="banner-img">
+                <div class="banner-overlay">
+                    <h2><i class="fas fa-wallet"></i> Mis Ingresos</h2>
+                    <p>Administración y control de flujos de caja de tus proyectos</p>
+                </div>
+            </div>
+
+            <div class="card stats-card">
+                <div class="stats-header">
+                    <h3><i class="fas fa-chart-bar text-purple"></i> Resumen de Ingresos</h3>
+                    <div class="stats-toggle">
+                        <div class="month-picker-wrapper">
+                            <input type="month" id="stats-mes-input" onchange="cambiarMesFiltro(this.value)">
+                            <button id="btn-stats-mes" class="btn-toggle active" onclick="activarFiltroMes()">Por Mes</button>
+                        </div>
+                        <button id="btn-stats-anio" class="btn-toggle" onclick="cambiarPeriodoStats('anio')">Este Año</button>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-box box-total">
+                        <span class="stat-label" id="label-total-dinamico">Total Mensual</span>
+                        <span class="stat-monto" id="stat-total-monto">$0,00</span>
+                    </div>
+                    <div class="stat-box box-redline">
+                        <span class="stat-label"><i class="fas fa-flag-checkered"></i> Redline</span>
+                        <span class="stat-monto" id="stat-redline-monto">$0,00</span>
+                    </div>
+                    <div class="stat-box box-propinas">
+                        <span class="stat-label"><i class="fas fa-jar-wheat"></i> Propinas</span>
+                        <span class="stat-monto" id="stat-propinas-monto">$0,00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ingresos-main-grid">
+                
+                <div class="card form-card-contenedor">
+                    <div class="widget-header">
+                        <h3><i class="fas fa-plus-circle text-purple"></i> Registrar Ingreso</h3>
+                    </div>
+                    <form id="form-ingreso-proyecto" class="simple-form">
+                        <div class="form-group">
+                            <label for="ingreso-fecha">Fecha</label>
+                            <input type="date" id="ingreso-fecha" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ingreso-categoria">Categoría</label>
+                            <select id="ingreso-categoria" required>
+                                <option value="" disabled selected>Selecciona una categoría...</option>
+                                <option value="Redline">Redline</option>
+                                <option value="Propinas">Propinas</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ingreso-monto">Monto ($)</label>
+                            <input type="number" step="0.01" id="ingreso-monto" placeholder="Ej: 12500" required>
+                        </div>
+
+                        <button type="submit" class="btn-submit-ingresos">Guardar Ingreso</button>
+                    </form>
+                </div>
+
+                <div class="ingresos-right-column">
+                    
+                    <div class="card consejos-card-contenedor">
+                        <div class="widget-header">
+                            <h3><i class="fas fa-chart-pie text-purple"></i> Proporción por Categoría</h3>
+                        </div>
+                        <div class="aportes-grafico-container" style="margin-top: 20px; display: flex; flex-direction: column; gap: 20px;">
+                            
+                            <div class="aporte-usuario">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-weight: 600; font-size: 0.95rem;">
+                                    <span><i class="fas fa-flag-checkered" style="color: #f87171;"></i> Redline</span>
+                                    <span id="monto-graf-redline">$0,00</span>
+                                </div>
+                                <div style="background: #1f2937; border-radius: 8px; height: 20px; width: 100%; overflow: hidden; border: 1px solid rgba(139, 92, 246, 0.2);">
+                                    <div id="barra-redline" style="background: #ef4444; height: 100%; width: 0%; transition: width 0.5s ease;"></div>
+                                </div>
+                            </div>
+
+                            <div class="aporte-usuario">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-weight: 600; font-size: 0.95rem;">
+                                    <span><i class="fas fa-jar-wheat" style="color: #60a5fa;"></i> Propinas</span>
+                                    <span id="monto-graf-propinas">$0,00</span>
+                                </div>
+                                <div style="background: #1f2937; border-radius: 8px; height: 20px; width: 100%; overflow: hidden; border: 1px solid rgba(139, 92, 246, 0.2);">
+                                    <div id="barra-propinas" style="background: #3b82f6; height: 100%; width: 0%; transition: width 0.5s ease;"></div>
+                                </div>
+                            </div>
+
+                            <div id="porcentaje-reparto" class="text-muted" style="font-size: 0.85rem; text-align: center; margin-top: 5px; color: #9ca3af;">
+                                Calculando totales...
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card historial-card-contenedor">
+                        <div class="widget-header">
+                            <h3><i class="fas fa-history text-purple"></i> Historial de Ingresos</h3>
+                        </div>
+                        <div class="historial-lista" id="historial-ingresos-proyecto"></div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let ingresosGlobal = JSON.parse(localStorage.getItem('ingresos_proyectos_datos')) || [];
+        let periodoActualStats = 'mes';
+        
+        const fechaHoy = new Date();
+        let mesSeleccionado = fechaHoy.getMonth(); 
+        let anioSeleccionado = fechaHoy.getFullYear();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('ingreso-fecha').value = fechaHoy.toISOString().split('T')[0];
+            
+            const formatoMesInput = `${anioSeleccionado}-${String(mesSeleccionado + 1).padStart(2, '0')}`;
+            document.getElementById('stats-mes-input').value = formatoMesInput;
+            
+            actualizarTextoBotonMes();
+            renderizarHistorialIngresos();
+            calcularEstadisticas();
+        });
+
+        document.getElementById('form-ingreso-proyecto').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const nuevoIngreso = {
+                id: Date.now(),
+                fecha: document.getElementById('ingreso-fecha').value,
+                categoria: document.getElementById('ingreso-categoria').value,
+                monto: parseFloat(document.getElementById('ingreso-monto').value)
+            };
+
+            ingresosGlobal.unshift(nuevoIngreso);
+            localStorage.setItem('ingresos_proyectos_datos', JSON.stringify(ingresosGlobal));
+
+            document.getElementById('form-ingreso-proyecto').reset();
+            document.getElementById('ingreso-fecha').value = new Date().toISOString().split('T')[0];
+
+            renderizarHistorialIngresos();
+            calcularEstadisticas();
+        });
+
+        function activarFiltroMes() {
+            periodoActualStats = 'mes';
+            document.getElementById('btn-stats-mes').classList.add('active');
+            document.getElementById('btn-stats-anio').classList.remove('active');
+            document.getElementById('stats-mes-input').showPicker(); 
+        }
+
+        function cambiarMesFiltro(valorInput) {
+            if(!valorInput) return;
+            
+            const partes = valorInput.split('-'); 
+            anioSeleccionado = parseInt(partes[0]);
+            mesSeleccionado = parseInt(partes[1]) - 1;
+
+            periodoActualStats = 'mes';
+            document.getElementById('btn-stats-mes').classList.add('active');
+            document.getElementById('btn-stats-anio').classList.remove('active');
+            
+            actualizarTextoBotonMes();
+            calcularEstadisticas();
+        }
+
+        function cambiarPeriodoStats(periodo) {
+            periodoActualStats = periodo;
+            document.getElementById('btn-stats-mes').classList.toggle('active', periodo === 'mes');
+            document.getElementById('btn-stats-anio').classList.toggle('active', periodo === 'anio');
+            calcularEstadisticas();
+        }
+
+        function actualizarTextoBotonMes() {
+            const mesesNombres = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+            document.getElementById('btn-stats-mes').innerHTML = `${mesesNombres[mesSeleccionado]} ${anioSeleccionado} <i class="fas fa-chevron-down" style="font-size:0.75rem; margin-left:2px;"></i>`;
+        }
+
+        function calcularEstadisticas() {
+            const ingresosFiltrados = ingresosGlobal.filter(i => {
+                const fechaGasto = new Date(i.fecha + 'T00:00:00');
+                if (periodoActualStats === 'mes') {
+                    return fechaGasto.getMonth() === mesSeleccionado && fechaGasto.getFullYear() === anioSeleccionado;
+                } else {
+                    return fechaGasto.getFullYear() === new Date().getFullYear();
+                }
+            });
+
+            let total = 0, redline = 0, propinas = 0;
+
+            ingresosFiltrados.forEach(i => {
+                total += i.monto;
+                if (i.categoria === 'Redline') redline += i.monto;
+                if (i.categoria === 'Propinas' || i.categoria === 'Papelería') propinas += i.monto;
+            });
+
+            const localeOption = { minimumFractionDigits: 2 };
+            document.getElementById('stat-total-monto').textContent = `$${total.toLocaleString('es-AR', localeOption)}`;
+            document.getElementById('stat-redline-monto').textContent = `$${redline.toLocaleString('es-AR', localeOption)}`;
+            document.getElementById('stat-propinas-monto').textContent = `$${propinas.toLocaleString('es-AR', localeOption)}`;
+
+            document.getElementById('monto-graf-redline').textContent = `$${redline.toLocaleString('es-AR', localeOption)}`;
+            document.getElementById('monto-graf-propinas').textContent = `$${propinas.toLocaleString('es-AR', localeOption)}`;
+
+            let pRedline = total > 0 ? (redline / total) * 100 : 0;
+            let pPropinas = total > 0 ? (propinas / total) * 100 : 0;
+
+            document.getElementById('barra-redline').style.width = `${pRedline}%`;
+            document.getElementById('barra-propinas').style.width = `${pPropinas}%`;
+
+            const mesesNombresLargos = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            
+            if (periodoActualStats === 'mes') {
+                document.getElementById('label-total-dinamico').textContent = `Total ${mesesNombresLargos[mesSeleccionado]}`;
+                document.getElementById('porcentaje-reparto').innerHTML = `
+                    Distribución de ${mesesNombresLargos[mesSeleccionado]} ${anioSeleccionado}: Redline <strong>${pRedline.toFixed(1)}%</strong> y Propinas <strong>${pPropinas.toFixed(1)}%</strong>.
+                `;
+            } else {
+                document.getElementById('label-total-dinamico').textContent = `Total Anual (${new Date().getFullYear()})`;
+                document.getElementById('porcentaje-reparto').innerHTML = `
+                    Distribución de todo el año: Redline <strong>${pRedline.toFixed(1)}%</strong> y Propinas <strong>${pPropinas.toFixed(1)}%</strong>.
+                `;
+            }
+        }
+
+        function renderizarHistorialIngresos() {
+            const listaElement = document.getElementById('historial-ingresos-proyecto');
+            
+            if (ingresosGlobal.length === 0) {
+                listaElement.innerHTML = `<p style="padding: 1.5rem; margin: 0; color: #9ca3af; text-align: center; font-size: 0.9rem;">No hay ingresos registrados aún.</p>`;
+                return;
+            }
+
+            listaElement.innerHTML = ingresosGlobal.map(i => {
+                const fechaVisual = i.fecha.split('-').reverse().join('/');
+
+                let icono = 'fa-code';
+                let claseColor = 'bg-redline';
+                let nombreCat = i.categoria;
+
+                if (i.categoria === 'Propinas' || i.categoria === 'Papelería') { 
+                    icono = 'fa-jar-wheat'; 
+                    claseColor = 'bg-propinas';
+                    nombreCat = 'Propinas';
+                }
+
+                return `
+                    <div class="historial-item">
+                        <div class="historial-item-left">
+                            <div class="ingresos-icon-wrapper ${claseColor}"><i class="fas ${icono}"></i></div>
+                            <div class="ingresos-detalles-texto">
+                                <span class="historial-item-cat">${nombreCat}</span>
+                                <span class="historial-item-date"><i class="far fa-calendar-alt"></i> ${fechaVisual}</span>
+                            </div>
+                        </div>
+                        <div class="historial-item-right-actions">
+                            <strong>$${i.monto.toLocaleString('es-AR', { minimumFractionDigits: 2 })}</strong>
+                            <button onclick="eliminarIngreso(${i.id})" class="btn-delete-ingreso" title="Eliminar">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function eliminarIngreso(id) {
+            if (confirm("¿Deseas eliminar este registro de ingreso?")) {
+                ingresosGlobal = ingresosGlobal.filter(i => i.id !== id);
+                localStorage.setItem('ingresos_proyectos_datos', JSON.stringify(ingresosGlobal));
+                renderizarHistorialIngresos();
+                calcularEstadisticas();
+            }
+        }
+    </script>
+</body>
+</html>

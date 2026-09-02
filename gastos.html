@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metas</title>
+    <link rel="icon" type="image/png" href="logo2.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="gastos.css">
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- BOTÓN DE RETORNO SOLO Y CIRCULAR -->
+        <div class="icon-circle purple-light" style="cursor:pointer; margin-bottom: 1.5rem;" onclick="window.location.href='index.html'" title="Volver al inicio">
+            <i class="fas fa-arrow-left"></i>
+        </div>
+
+        <main>
+             <div class="card widget-card" style="margin-bottom: 2rem;">
+                 <div class="widget-header">
+                     <i class="fas fa-clipboard-list purple-text"></i>
+                      <h3>Planificador de Compras</h3>
+                 </div>
+                 <p style="color: var(--text-muted); font-size: 0.95rem;">
+                     Anotá tus metas materiales a futuro para tener un presupuesto estimado de tus proyectos.
+                 </p>
+             </div>
+            <div class="wishlist-grid">
+                
+                <!-- Formulario para agregar deseos -->
+                <div class="card widget-card" style="height: fit-content;">
+                    <div class="widget-header">
+                        <i class="fas fa-lightbulb purple-text"></i>
+                        <h3>¿Qué querés sumar?</h3>
+                    </div>
+                    <form id="form-nuevo-deseo" class="wish-form">
+                        <div class="form-field">
+                            <label for="wish-nombre">Ítem / Cosa deseada</label>
+                            <input type="text" id="wish-nombre" placeholder="Ej: Cambiar capó, Heladera, Ruedas" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="wish-precio">Precio Estimado ($)</label>
+                            <input type="number" id="wish-precio" placeholder="Ej: 120000" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="wish-categoria">Categoría asignada</label>
+                            <select id="wish-categoria" required>
+                                <option value="auto">🚘 Mi Clio</option>
+                                <option value="hogar">🏠 Hogar</option>
+                                <option value="mascotas">🐾 Mascotas</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-wish-submit">Añadir a la lista</button>
+                    </form>
+                </div>
+
+                <!-- Contenedor del Checklist -->
+                <div>
+                    <div class="widget-header" style="margin-bottom: 1rem;">
+                        <i class="fas fa-list-ul purple-text"></i>
+                        <h3>Mi Checklist de Futuros Proyectos</h3>
+                    </div>
+                    
+                    <div id="contenedor-wishlist" class="wishlist-container">
+                        <!-- Se renderizan dinámicamente -->
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let wishlist = JSON.parse(localStorage.getItem('wishlist_datos')) || [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderizarWishlist();
+        });
+
+        // Crear nuevo deseo
+        document.getElementById('form-nuevo-deseo').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const nombre = document.getElementById('wish-nombre').value;
+            const precio = parseFloat(document.getElementById('wish-precio').value);
+            const categoria = document.getElementById('wish-categoria').value;
+
+            const nuevoDeseo = {
+                id: Date.now(),
+                nombre: nombre,
+                precio: precio,
+                categoria: categoria,
+                comprado: false
+            };
+
+            wishlist.push(nuevoDeseo);
+            guardarEnStorage();
+            document.getElementById('form-nuevo-deseo').reset();
+        });
+
+        // Cambiar estado de comprado (Check / Uncheck)
+        function toggleComprado(id) {
+            wishlist = wishlist.map(item => {
+                if(item.id === id) {
+                    return { ...item, comprado: !item.comprado };
+                }
+                return item;
+            });
+            guardarEnStorage();
+        }
+
+        // Eliminar ítem
+        function eliminarDeseo(id) {
+            wishlist = wishlist.filter(item => item.id !== id);
+            guardarEnStorage();
+        }
+
+        function guardarEnStorage() {
+            localStorage.setItem('wishlist_datos', JSON.stringify(wishlist));
+            renderizarWishlist();
+        }
+
+        function renderizarWishlist() {
+            const contenedor = document.getElementById('contenedor-wishlist');
+
+            if(wishlist.length === 0) {
+                contenedor.innerHTML = `<div class="card" style="text-align: center; padding: 3rem; color: var(--text-muted); font-weight: 500;">Tu lista de deseos está vacía. ¡Agrega tu primer proyecto futuro!</div>`;
+                return;
+            }
+
+            contenedor.innerHTML = wishlist.map(item => {
+                let tagCategoria = '';
+                if(item.categoria === 'auto') tagCategoria = '🚘 Mi Clio';
+                if(item.categoria === 'hogar') tagCategoria = '🏠 Hogar';
+                if(item.categoria === 'mascotas') tagCategoria = '🐾 Mascotas';
+
+                return `
+                    <div class="wish-item categoria-${item.categoria} ${item.comprado ? 'completado' : ''}">
+                        <div class="wish-left">
+                            <div class="wish-checkbox" onclick="toggleComprado(${item.id})">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="wish-details">
+                                <h4 class="wish-title">${item.nombre}</h4>
+                                <p>${tagCategoria}</p>
+                            </div>
+                        </div>
+                        <div class="wish-right">
+                            <span class="wish-price">$${item.precio.toLocaleString('es-AR', { minimumFractionDigits: 2 })}</span>
+                            <button onclick="eliminarDeseo(${item.id})" class="btn-delete-wish" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+    </script>
+</body>
+</html>
